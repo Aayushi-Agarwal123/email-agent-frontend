@@ -1,5 +1,5 @@
 import type { ComponentType } from "react";
-import { BellIcon, ServerIcon, MailIcon, UserIcon, LayoutDashboardIcon, PackageIcon } from "lucide-react";
+import { BellIcon, ServerIcon, UserIcon, LayoutDashboardIcon, PackageIcon } from "lucide-react";
 import { ModeToggle } from "@/components/mode-toggle";
 import type { MetricsHealthV1 } from "@/lib/metrics-contract";
 import { cn } from "@/lib/utils";
@@ -79,7 +79,6 @@ export function TopBar({ tenantName, health, reviewQueueCount, view, onViewChang
 
         <div className="flex items-center gap-2 sm:gap-3">
           <StatusPill ok={health.live} okLabel="Live" badLabel="Offline" icon={ServerIcon} />
-          <StatusPill ok={health.gmailConnected} okLabel="Gmail" badLabel="Reconnect Gmail" icon={MailIcon} pulseBad />
           <button
             type="button"
             className="relative rounded-full p-2 text-muted-foreground hover:bg-muted hover:text-foreground"
