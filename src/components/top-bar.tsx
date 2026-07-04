@@ -1,5 +1,5 @@
 import type { ComponentType } from "react";
-import { BellIcon, ServerIcon, UserIcon, LayoutDashboardIcon, PackageIcon } from "lucide-react";
+import { BellIcon, ServerIcon, LayoutDashboardIcon, PackageIcon } from "lucide-react";
 import { ModeToggle } from "@/components/mode-toggle";
 import type { MetricsHealthV1 } from "@/lib/metrics-contract";
 import { cn } from "@/lib/utils";
@@ -93,9 +93,6 @@ export function TopBar({ tenantName, health, reviewQueueCount, view, onViewChang
             )}
           </button>
           <ModeToggle />
-          <div className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-muted">
-            <UserIcon className="h-4 w-4" />
-          </div>
         </div>
       </div>
     </header>
