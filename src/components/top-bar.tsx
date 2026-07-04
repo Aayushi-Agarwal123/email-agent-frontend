@@ -1,10 +1,10 @@
 import type { ComponentType } from "react";
-import { BellIcon, ServerIcon, LayoutDashboardIcon, PackageIcon } from "lucide-react";
+import { BellIcon, ServerIcon, LayoutDashboardIcon, PackageIcon, SettingsIcon, LogOutIcon } from "lucide-react";
 import { ModeToggle } from "@/components/mode-toggle";
 import type { MetricsHealthV1 } from "@/lib/metrics-contract";
 import { cn } from "@/lib/utils";
 
-export type View = "overview" | "catalog";
+export type View = "overview" | "catalog" | "settings";
 
 type IconType = ComponentType<{ className?: string }>;
 
@@ -54,12 +54,14 @@ function StatusPill({ ok, okLabel, badLabel, icon: Icon, pulseBad }: {
   );
 }
 
-export function TopBar({ tenantName, health, reviewQueueCount, view, onViewChange }: {
+export function TopBar({ tenantName, health, reviewQueueCount, view, onViewChange, email, onSignOut }: {
   tenantName: string;
   health: MetricsHealthV1;
   reviewQueueCount: number;
   view: View;
   onViewChange: (v: View) => void;
+  email?: string;
+  onSignOut?: () => void;
 }) {
   return (
     <header className="sticky top-0 z-30 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -74,6 +76,7 @@ export function TopBar({ tenantName, health, reviewQueueCount, view, onViewChang
           <nav className="flex items-center gap-1">
             <NavButton icon={LayoutDashboardIcon} label="Overview" active={view === "overview"} onClick={() => onViewChange("overview")} />
             <NavButton icon={PackageIcon} label="Catalog" active={view === "catalog"} onClick={() => onViewChange("catalog")} />
+            <NavButton icon={SettingsIcon} label="Settings" active={view === "settings"} onClick={() => onViewChange("settings")} />
           </nav>
         </div>
 
@@ -93,6 +96,17 @@ export function TopBar({ tenantName, health, reviewQueueCount, view, onViewChang
             )}
           </button>
           <ModeToggle />
+          {onSignOut && (
+            <button
+              type="button"
+              onClick={onSignOut}
+              title={email ? `Sign out (${email})` : "Sign out"}
+              className="inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
+            >
+              <LogOutIcon className="h-4 w-4" />
+              <span className="hidden md:inline">Sign out</span>
+            </button>
+          )}
         </div>
       </div>
     </header>

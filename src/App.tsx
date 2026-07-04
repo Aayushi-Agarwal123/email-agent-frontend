@@ -5,6 +5,9 @@ import { DashboardLists } from "@/components/dashboard/lists";
 import { SystemStrip, GmailBanner } from "@/components/dashboard/health";
 import { TopBar, type View } from "@/components/top-bar";
 import { CatalogPage } from "@/components/catalog/catalog-page";
+import { SettingsPage } from "@/components/settings/settings-page";
+import { Login } from "@/components/login";
+import { useAuth } from "@/lib/auth";
 import { fetchOverview, fetchConversations, fetchQuotations, fetchReviewQueue } from "@/lib/api";
 import type {
   MetricsOverviewV1,
@@ -14,10 +17,12 @@ import type {
 } from "@/lib/metrics-contract";
 import { Loader2Icon } from "lucide-react";
 
-const TENANT_ID = "kfel"; // demo; in production the BFF derives this from the login token
 const TENANT_NAME = "K-Fel Valves";
 
 export default function App() {
+  const { session, live, logout } = useAuth();
+  const tenantId = session?.tenantId ?? "kfel";
+
   const [view, setView] = useState<View>("overview");
   const [overview, setOverview] = useState<MetricsOverviewV1 | null>(null);
   const [conversations, setConversations] = useState<MetricsConversationsPageV1 | null>(null);
@@ -27,14 +32,15 @@ export default function App() {
   const [error, setError] = useState(false);
 
   useEffect(() => {
+    if (!session) return;
     let alive = true;
     const load = async () => {
       try {
         const [ov, conv, quot, rev] = await Promise.all([
-          fetchOverview(TENANT_ID),
-          fetchConversations(TENANT_ID),
-          fetchQuotations(TENANT_ID),
-          fetchReviewQueue(TENANT_ID),
+          fetchOverview(tenantId),
+          fetchConversations(tenantId),
+          fetchQuotations(tenantId),
+          fetchReviewQueue(tenantId),
         ]);
         if (!alive) return;
         setOverview(ov);
@@ -50,12 +56,15 @@ export default function App() {
       }
     };
     load();
-    const interval = setInterval(load, 30_000); // poll ~30s per the contract
+    const interval = setInterval(load, 30_000);
     return () => {
       alive = false;
       clearInterval(interval);
     };
-  }, []);
+  }, [session, tenantId]);
+
+  // Live mode requires a real login; fixture/preview mode runs as a demo session.
+  if (live && !session) return <Login />;
 
   if (loading && !overview) {
     return (
@@ -86,34 +95,42 @@ export default function App() {
         reviewQueueCount={overview.reviewQueueCount}
         view={view}
         onViewChange={setView}
+        email={session?.email}
+        onSignOut={live ? logout : undefined}
       />
 
       <main className="container mx-auto space-y-6 px-4 py-8">
-        {view === "overview" ? (
+        {view === "overview" && (
           <>
             <div className="flex flex-col gap-1">
               <h2 className="text-2xl font-bold tracking-tight">Overview</h2>
               <p className="text-muted-foreground">Here's what your email quoting agent has been up to.</p>
             </div>
-
             <GmailBanner health={overview.health} />
             <KpiCards data={overview} />
             <DashboardCharts data={overview} />
-            <DashboardLists
-              conversations={conversations}
-              quotations={quotations}
-              reviewQueue={reviewQueue}
-              overview={overview}
-            />
+            <DashboardLists conversations={conversations} quotations={quotations} reviewQueue={reviewQueue} overview={overview} />
             <SystemStrip health={overview.health} />
           </>
-        ) : (
+        )}
+
+        {view === "catalog" && (
           <>
             <div className="flex flex-col gap-1">
               <h2 className="text-2xl font-bold tracking-tight">Catalog</h2>
               <p className="text-muted-foreground">The products and prices your agent quotes from.</p>
             </div>
-            <CatalogPage tenantId={TENANT_ID} />
+            <CatalogPage tenantId={tenantId} />
+          </>
+        )}
+
+        {view === "settings" && (
+          <>
+            <div className="flex flex-col gap-1">
+              <h2 className="text-2xl font-bold tracking-tight">Settings</h2>
+              <p className="text-muted-foreground">Manage how your quoting agent behaves.</p>
+            </div>
+            <SettingsPage tenantId={tenantId} />
           </>
         )}
       </main>
