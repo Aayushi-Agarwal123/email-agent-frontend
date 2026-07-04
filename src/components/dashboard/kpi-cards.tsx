@@ -6,7 +6,6 @@ import type { MetricsOverviewV1 } from "@/lib/metrics-contract";
 const HINTS = {
   quotesReleased: "Quotations approved by your reviewer and emailed to customers during the selected period. Value pending is the total of drafts still awaiting your approval.",
   valueReleased: "Total value of the quotations released to customers in the period, in your currency. Approval time is how long, on median, you take to approve a draft.",
-  straightThrough: "Share of requests the agent handled end-to-end — extracted, priced and ready — with NO clarification round-trip and NO escalation, leaving only your approval.",
   timeToQuote: "Median time from the customer's first email to the quote being released. Escalation rate is the share of requests that fell out to a human.",
 } as const;
 
@@ -52,7 +51,7 @@ export function KpiCards({ data }: { data: MetricsOverviewV1 }) {
   };
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-4 md:grid-cols-3">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Quotes Released</CardTitle>
@@ -79,21 +78,6 @@ export function KpiCards({ data }: { data: MetricsOverviewV1 }) {
           <div className="text-xs text-muted-foreground mt-3 flex items-center justify-between">
             <span>Approval time:</span>
             <span className="font-medium text-foreground">{data.secondary.medianApprovalTimeMinutes ? `${data.secondary.medianApprovalTimeMinutes}m` : 'N/A'}</span>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Straight-Through Rate</CardTitle>
-          <InfoHint text={HINTS.straightThrough} />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">{(kpis.straightThroughRate.value * 100).toFixed(1)}%</div>
-          <div className="mt-1">{renderDelta(kpis.straightThroughRate.deltaPts, true)}</div>
-          <div className="text-xs text-muted-foreground mt-3 flex items-center justify-between">
-            <span>Clarification rate:</span>
-            <span className="font-medium text-foreground">{(data.secondary.clarificationRate * 100).toFixed(1)}%</span>
           </div>
         </CardContent>
       </Card>

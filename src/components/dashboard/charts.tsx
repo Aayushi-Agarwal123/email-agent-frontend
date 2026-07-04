@@ -3,13 +3,12 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import type { MetricsOverviewV1 } from "@/lib/metrics-contract";
 
-type MetricKey = "received" | "released" | "valueReleased" | "straightThroughRate" | "medianTimeToQuoteMinutes";
+type MetricKey = "received" | "released" | "valueReleased" | "medianTimeToQuoteMinutes";
 
 const METRICS: { key: MetricKey; label: string; color: string; kind: "count" | "money" | "rate" | "minutes" }[] = [
   { key: "received", label: "Requests received", color: "#3b82f6", kind: "count" },
   { key: "released", label: "Quotes released", color: "#10b981", kind: "count" },
   { key: "valueReleased", label: "Value released", color: "#8b5cf6", kind: "money" },
-  { key: "straightThroughRate", label: "Straight-through rate", color: "#14b8a6", kind: "rate" },
   { key: "medianTimeToQuoteMinutes", label: "Time to quote", color: "#f59e0b", kind: "minutes" },
 ];
 
