@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Area, AreaChart, CartesianGrid, XAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
+import { Area, AreaChart, CartesianGrid, XAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import type { MetricsOverviewV1 } from "@/lib/metrics-contract";
 
 export function DashboardCharts({ data }: { data: MetricsOverviewV1 }) {
@@ -57,37 +57,47 @@ export function DashboardCharts({ data }: { data: MetricsOverviewV1 }) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="h-[300px] w-full flex items-center justify-center relative">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={funnelData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={80}
-                  outerRadius={110}
-                  paddingAngle={2}
-                  dataKey="value"
-                  stroke="none"
-                >
-                  {funnelData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.fill} />
-                  ))}
-                </Pie>
-                <Tooltip 
-                  contentStyle={{ borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--background)' }}
-                  itemStyle={{ color: 'var(--foreground)' }}
-                />
-                <Legend verticalAlign="bottom" height={36} iconType="circle" />
-              </PieChart>
-            </ResponsiveContainer>
-            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none pb-[36px]">
-              <span className="text-3xl font-bold">{funnel.total}</span>
-              <span className="text-xs text-muted-foreground uppercase tracking-wider">RFQs</span>
+          <div className="flex items-center gap-4">
+            <div className="relative h-[240px] w-[200px] shrink-0">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={funnelData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={65}
+                    outerRadius={95}
+                    paddingAngle={2}
+                    dataKey="value"
+                    stroke="none"
+                  >
+                    {funnelData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.fill} />
+                    ))}
+                  </Pie>
+                </PieChart>
+              </ResponsiveContainer>
+              <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
+                <span className="text-3xl font-bold">{funnel.total}</span>
+                <span className="text-xs uppercase tracking-wider text-muted-foreground">RFQs</span>
+              </div>
             </div>
-          </div>
-          <div className="mt-4 text-center text-xs text-muted-foreground">
-            + {funnel.ignored} non-RFQ messages ignored
+
+            <div className="flex-1 space-y-2.5">
+              {funnelData.map((d) => (
+                <div key={d.name} className="flex items-center justify-between text-sm">
+                  <span className="flex items-center gap-2 text-muted-foreground">
+                    <span className="h-2.5 w-2.5 rounded-full" style={{ background: d.fill }} />
+                    {d.name}
+                  </span>
+                  <span className="font-semibold tabular-nums">{d.value}</span>
+                </div>
+              ))}
+              <div className="mt-2 flex items-center justify-between border-t pt-2 text-xs text-muted-foreground">
+                <span>Ignored (non-RFQ)</span>
+                <span className="tabular-nums">{funnel.ignored}</span>
+              </div>
+            </div>
           </div>
         </CardContent>
       </Card>

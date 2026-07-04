@@ -54,8 +54,9 @@ function StatusPill({ ok, okLabel, badLabel, icon: Icon, pulseBad }: {
   );
 }
 
-export function TopBar({ tenantName, health, reviewQueueCount, view, onViewChange }: {
+export function TopBar({ tenantName, tenantId, health, reviewQueueCount, view, onViewChange }: {
   tenantName: string;
+  tenantId: string;
   health: MetricsHealthV1;
   reviewQueueCount: number;
   view: View;
@@ -69,7 +70,9 @@ export function TopBar({ tenantName, health, reviewQueueCount, view, onViewChang
             <div className="flex h-8 w-8 items-center justify-center rounded bg-primary font-bold text-primary-foreground">
               K
             </div>
-            <span className="hidden text-lg font-bold tracking-tight sm:inline">{tenantName}</span>
+            <span className="hidden text-lg font-bold tracking-tight sm:inline">
+              {tenantName} <span className="font-normal text-muted-foreground">({tenantId})</span>
+            </span>
           </div>
           <nav className="flex items-center gap-1">
             <NavButton icon={LayoutDashboardIcon} label="Overview" active={view === "overview"} onClick={() => onViewChange("overview")} />
