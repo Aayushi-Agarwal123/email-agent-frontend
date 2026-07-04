@@ -1,0 +1,13 @@
+{
+  "rows": [
+    { "id": "v-8842", "category": "gate_valve", "label": "2\" Gate Valve CL150 Flanged (WCB)", "attributes": { "pressure_class": "150", "end_type": "flanged", "moc": "WCB", "size": "2in" }, "unitPrice": 12610, "unit": "ea", "currency": "INR" },
+    { "id": "v-8843", "category": "gate_valve", "label": "3\" Gate Valve CL300 Flanged (WCB/316)", "attributes": { "pressure_class": "300", "end_type": "flanged", "moc": "WCB/316", "size": "3in" }, "unitPrice": 24980, "unit": "ea", "currency": "INR" },
+    { "id": "v-5521", "category": "ball_valve", "label": "2\" Ball Valve 2PC CL150 (WCB/304)", "attributes": { "pressure_class": "150", "end_type": "flanged", "moc": "WCB/304", "size": "2in" }, "unitPrice": 8450, "unit": "ea", "currency": "INR" },
+    { "id": "v-5522", "category": "ball_valve", "label": "1\" Ball Valve 3PC CL800 Threaded (SS316)", "attributes": { "pressure_class": "800", "end_type": "threaded", "moc": "SS316", "size": "1in" }, "unitPrice": 6120, "unit": "ea", "currency": "INR" },
+    { "id": "v-3310", "category": "butterfly_valve", "label": "6\" Butterfly Valve Wafer CL150 (CI/SS)", "attributes": { "pressure_class": "150", "end_type": "wafer", "moc": "CI/SS", "size": "6in" }, "unitPrice": 15300, "unit": "ea", "currency": "INR" },
+    { "id": "v-9004", "category": "globe_valve", "label": "2\" Globe Valve CL150 Flanged (WCB)", "attributes": { "pressure_class": "150", "end_type": "flanged", "moc": "WCB", "size": "2in" }, "unitPrice": 18700, "unit": "ea", "currency": "INR" },
+    { "id": "v-7001", "category": "check_valve", "label": "3\" Swing Check Valve CL150 Flanged (WCB)", "attributes": { "pressure_class": "150", "end_type": "flanged", "moc": "WCB", "size": "3in" }, "unitPrice": 11200, "unit": "ea", "currency": "INR" },
+    { "id": "v-7002", "category": "check_valve", "label": "4\" Dual Plate Check Valve CL300 Wafer (SS316)", "attributes": { "pressure_class": "300", "end_type": "wafer", "moc": "SS316", "size": "4in" }, "unitPrice": 21450, "unit": "ea", "currency": "INR" }
+  ],
+  "total": 8
+}

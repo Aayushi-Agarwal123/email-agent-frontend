@@ -2,120 +2,120 @@ import { useEffect, useState } from "react";
 import { KpiCards } from "@/components/dashboard/kpi-cards";
 import { DashboardCharts } from "@/components/dashboard/charts";
 import { DashboardLists } from "@/components/dashboard/lists";
-import { DashboardHealth } from "@/components/dashboard/health";
-import { 
-  fetchOverview, 
-  fetchConversations, 
-  fetchQuotations, 
-  fetchReviewQueue 
-} from "@/lib/api";
-import type { 
-  MetricsOverviewV1, 
-  MetricsConversationsPageV1, 
-  MetricsQuotationsPageV1, 
-  MetricsReviewQueueV1 
+import { SystemStrip, GmailBanner } from "@/components/dashboard/health";
+import { TopBar, type View } from "@/components/top-bar";
+import { CatalogPage } from "@/components/catalog/catalog-page";
+import { fetchOverview, fetchConversations, fetchQuotations, fetchReviewQueue } from "@/lib/api";
+import type {
+  MetricsOverviewV1,
+  MetricsConversationsPageV1,
+  MetricsQuotationsPageV1,
+  MetricsReviewQueueV1,
 } from "@/lib/metrics-contract";
-import { Loader2Icon, SettingsIcon, UserIcon } from "lucide-react";
-import { ModeToggle } from "@/components/mode-toggle";
+import { Loader2Icon } from "lucide-react";
+
+const TENANT_ID = "kfel"; // demo; in production the BFF derives this from the login token
+const TENANT_NAME = "K-Fel Valves";
 
 export default function App() {
-  const tenantId = "kfel"; // Hardcoded for demo, normally from token
-  
+  const [view, setView] = useState<View>("overview");
   const [overview, setOverview] = useState<MetricsOverviewV1 | null>(null);
   const [conversations, setConversations] = useState<MetricsConversationsPageV1 | null>(null);
   const [quotations, setQuotations] = useState<MetricsQuotationsPageV1 | null>(null);
   const [reviewQueue, setReviewQueue] = useState<MetricsReviewQueueV1 | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    const loadData = async () => {
-      setLoading(true);
+    let alive = true;
+    const load = async () => {
       try {
         const [ov, conv, quot, rev] = await Promise.all([
-          fetchOverview(tenantId),
-          fetchConversations(tenantId),
-          fetchQuotations(tenantId),
-          fetchReviewQueue(tenantId)
+          fetchOverview(TENANT_ID),
+          fetchConversations(TENANT_ID),
+          fetchQuotations(TENANT_ID),
+          fetchReviewQueue(TENANT_ID),
         ]);
+        if (!alive) return;
         setOverview(ov);
         setConversations(conv);
         setQuotations(quot);
         setReviewQueue(rev);
+        setError(false);
       } catch (e) {
         console.error("Failed to fetch dashboard data", e);
+        if (alive) setError(true);
       } finally {
-        setLoading(false);
+        if (alive) setLoading(false);
       }
     };
-    
-    loadData();
-    // Poll every 30s as per PRD
-    const interval = setInterval(loadData, 30000);
-    return () => clearInterval(interval);
+    load();
+    const interval = setInterval(load, 30_000); // poll ~30s per the contract
+    return () => {
+      alive = false;
+      clearInterval(interval);
+    };
   }, []);
 
   if (loading && !overview) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
         <Loader2Icon className="h-8 w-8 animate-spin text-primary" />
-        <span className="ml-2 text-lg font-medium">Loading Dashboard...</span>
+        <span className="ml-2 text-lg font-medium">Loading dashboard…</span>
       </div>
     );
   }
 
-  if (!overview || !conversations || !quotations || !reviewQueue) {
+  if (error && !overview) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
-        <div className="text-destructive text-lg font-medium">Failed to load dashboard data.</div>
+        <div className="text-lg font-medium text-destructive">
+          Couldn't load the dashboard. Check the API connection and retry.
+        </div>
       </div>
     );
   }
 
+  if (!overview || !conversations || !quotations || !reviewQueue) return null;
+
   return (
-    <div className="min-h-screen bg-background text-foreground font-sans">
-      <header className="sticky top-0 z-30 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center justify-center h-8 w-8 rounded bg-primary text-primary-foreground font-bold">
-              K
+    <div className="min-h-screen bg-background font-sans text-foreground">
+      <TopBar
+        tenantName={TENANT_NAME}
+        health={overview.health}
+        reviewQueueCount={overview.reviewQueueCount}
+        view={view}
+        onViewChange={setView}
+      />
+
+      <main className="container mx-auto space-y-6 px-4 py-8">
+        {view === "overview" ? (
+          <>
+            <div className="flex flex-col gap-1">
+              <h2 className="text-2xl font-bold tracking-tight">Overview</h2>
+              <p className="text-muted-foreground">Here's what your email quoting agent has been up to.</p>
             </div>
-            <h1 className="text-xl font-bold tracking-tight">K-Fel Valves</h1>
-          </div>
-          <div className="flex items-center gap-4 text-muted-foreground">
-            <div className="text-sm px-3 py-1 bg-muted rounded-full">
-              Window: 14 Days
+
+            <GmailBanner health={overview.health} />
+            <KpiCards data={overview} />
+            <DashboardCharts data={overview} />
+            <DashboardLists
+              conversations={conversations}
+              quotations={quotations}
+              reviewQueue={reviewQueue}
+              overview={overview}
+            />
+            <SystemStrip health={overview.health} />
+          </>
+        ) : (
+          <>
+            <div className="flex flex-col gap-1">
+              <h2 className="text-2xl font-bold tracking-tight">Catalog</h2>
+              <p className="text-muted-foreground">The products and prices your agent quotes from.</p>
             </div>
-            <ModeToggle />
-            <SettingsIcon className="h-5 w-5 hover:text-foreground cursor-pointer transition-colors" />
-            <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center overflow-hidden border border-border">
-              <UserIcon className="h-5 w-5" />
-            </div>
-          </div>
-        </div>
-      </header>
-      
-      <main className="container mx-auto px-4 py-8 space-y-8">
-        <div className="flex flex-col gap-2">
-          <h2 className="text-3xl font-bold tracking-tight">Overview</h2>
-          <p className="text-muted-foreground">
-            Here's what your email quoting agent has been up to.
-          </p>
-        </div>
-        
-        <DashboardHealth health={overview.health} />
-        
-        <KpiCards data={overview} />
-        
-        <DashboardCharts data={overview} />
-        
-        <div className="grid gap-4 md:grid-cols-1">
-          <DashboardLists 
-            conversations={conversations} 
-            quotations={quotations} 
-            reviewQueue={reviewQueue} 
-            overview={overview}
-          />
-        </div>
+            <CatalogPage tenantId={TENANT_ID} />
+          </>
+        )}
       </main>
     </div>
   );
