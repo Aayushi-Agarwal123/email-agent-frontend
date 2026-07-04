@@ -1,0 +1,249 @@
+{
+  "_readme": "Mock payloads for the Metrics Export API v1. Every payload here validates against src/dashboard/metrics-contract.ts. Build the dashboard against these with zero backend: serve them from MSW/json-server keyed by the endpoint paths below, then point at the real API by swapping the base URL. Each endpoint has a 'populated' and an 'empty' (fresh-tenant) scenario; the 'errors' block shows the non-200 shapes to handle.",
+
+  "GET /v1/tenants/{tenantId}/metrics/overview": {
+    "populated": {
+      "v": 1,
+      "tenantId": "kfel",
+      "window": {
+        "from": "2026-06-21T00:00:00.000Z",
+        "to": "2026-07-05T00:00:00.000Z",
+        "granularity": "day"
+      },
+      "kpis": {
+        "quotesReleased": { "value": 12, "deltaPct": 12.4 },
+        "valueReleased": { "value": { "amount": 1840000, "currency": "INR" }, "deltaPct": -4.2 },
+        "straightThroughRate": { "value": 0.72, "deltaPts": 5 },
+        "medianTimeToQuoteMinutes": { "value": 34, "deltaPct": -18 }
+      },
+      "secondary": {
+        "clarificationRate": 0.18,
+        "avgClarificationRounds": 0.4,
+        "escalationRate": 0.1,
+        "medianApprovalTimeMinutes": 180,
+        "valueAwaitingApproval": { "amount": 250000, "currency": "INR" }
+      },
+      "funnel": {
+        "total": 20,
+        "released": 12,
+        "awaitingReview": 2,
+        "clarifying": 3,
+        "escalated": 2,
+        "inProgress": 1,
+        "ignored": 7
+      },
+      "escalationReasons": [
+        { "reason": "no_match", "count": 1 },
+        { "reason": "ambiguous", "count": 1 }
+      ],
+      "activity": [
+        { "date": "2026-06-30", "received": 2, "released": 1 },
+        { "date": "2026-07-01", "received": 3, "released": 2 },
+        { "date": "2026-07-02", "received": 1, "released": 1 },
+        { "date": "2026-07-03", "received": 4, "released": 3 },
+        { "date": "2026-07-04", "received": 1, "released": 1 },
+        { "date": "2026-07-05", "received": 2, "released": 0 }
+      ],
+      "reviewQueueCount": 2,
+      "health": {
+        "live": true,
+        "gmailConnected": true,
+        "lastPollAt": "2026-07-05T09:59:00.000Z",
+        "bounceRate": 0,
+        "deadLetteredCount": 0
+      }
+    },
+    "empty": {
+      "v": 1,
+      "tenantId": "newco",
+      "window": {
+        "from": "2026-06-21T00:00:00.000Z",
+        "to": "2026-07-05T00:00:00.000Z",
+        "granularity": "day"
+      },
+      "kpis": {
+        "quotesReleased": { "value": 0, "deltaPct": null },
+        "valueReleased": { "value": { "amount": 0, "currency": "INR" }, "deltaPct": null },
+        "straightThroughRate": { "value": 0, "deltaPts": null },
+        "medianTimeToQuoteMinutes": { "value": null, "deltaPct": null }
+      },
+      "secondary": {
+        "clarificationRate": 0,
+        "avgClarificationRounds": 0,
+        "escalationRate": 0,
+        "medianApprovalTimeMinutes": null,
+        "valueAwaitingApproval": { "amount": 0, "currency": "INR" }
+      },
+      "funnel": {
+        "total": 0,
+        "released": 0,
+        "awaitingReview": 0,
+        "clarifying": 0,
+        "escalated": 0,
+        "inProgress": 0,
+        "ignored": 0
+      },
+      "escalationReasons": [],
+      "activity": [
+        { "date": "2026-07-03", "received": 0, "released": 0 },
+        { "date": "2026-07-04", "received": 0, "released": 0 },
+        { "date": "2026-07-05", "received": 0, "released": 0 }
+      ],
+      "reviewQueueCount": 0,
+      "health": {
+        "live": true,
+        "gmailConnected": false,
+        "lastPollAt": null,
+        "bounceRate": 0,
+        "deadLetteredCount": 0
+      }
+    }
+  },
+
+  "GET /v1/tenants/{tenantId}/conversations?limit=20&offset=0": {
+    "populated": {
+      "v": 1,
+      "tenantId": "kfel",
+      "rows": [
+        {
+          "conversationId": "thread-1",
+          "customerEmail": "buyer@acme.test",
+          "subject": "Need gate valves",
+          "snippet": "10x 2\" gate valve CL150 flanged",
+          "stage": "QUOTED",
+          "quotationNumber": "QUO-20260705-0001",
+          "lineCount": 2,
+          "lastActivityAt": "2026-07-05T09:30:00.000Z"
+        },
+        {
+          "conversationId": "thread-2",
+          "customerEmail": "ops@globex.test",
+          "subject": "RFQ butterfly valves",
+          "snippet": "Which pressure class did you need?",
+          "stage": "AWAITING_CUSTOMER",
+          "quotationNumber": null,
+          "lineCount": null,
+          "lastActivityAt": "2026-07-05T08:00:00.000Z"
+        },
+        {
+          "conversationId": "thread-3",
+          "customerEmail": "purchasing@initech.test",
+          "subject": "Globe valve sizes",
+          "snippet": "Sent to reviewer for approval",
+          "stage": "AWAITING_REVIEW",
+          "quotationNumber": "QUO-20260705-0002",
+          "lineCount": 2,
+          "lastActivityAt": "2026-07-05T07:00:00.000Z"
+        },
+        {
+          "conversationId": "thread-4",
+          "customerEmail": "spam@random.test",
+          "subject": "Partnership opportunity",
+          "snippet": "Escalated: could not price any line",
+          "stage": "ESCALATED",
+          "quotationNumber": null,
+          "lineCount": null,
+          "lastActivityAt": "2026-07-04T18:00:00.000Z"
+        }
+      ],
+      "page": { "limit": 20, "offset": 0, "total": 4 }
+    },
+    "empty": {
+      "v": 1,
+      "tenantId": "newco",
+      "rows": [],
+      "page": { "limit": 20, "offset": 0, "total": 0 }
+    }
+  },
+
+  "GET /v1/tenants/{tenantId}/quotations?limit=20&offset=0": {
+    "populated": {
+      "v": 1,
+      "tenantId": "kfel",
+      "rows": [
+        {
+          "quotationNumber": "QUO-20260705-0001",
+          "conversationId": "thread-1",
+          "customerEmail": "buyer@acme.test",
+          "total": { "amount": 250000, "currency": "INR" },
+          "status": "released",
+          "lineCount": 2,
+          "updatedAt": "2026-07-05T09:30:00.000Z",
+          "releasedAt": "2026-07-05T09:30:00.000Z"
+        },
+        {
+          "quotationNumber": "QUO-20260705-0002",
+          "conversationId": "thread-3",
+          "customerEmail": "purchasing@initech.test",
+          "total": { "amount": 1840000, "currency": "INR" },
+          "status": "awaiting_review",
+          "lineCount": 2,
+          "updatedAt": "2026-07-05T07:00:00.000Z",
+          "releasedAt": null
+        }
+      ],
+      "page": { "limit": 20, "offset": 0, "total": 2 }
+    },
+    "empty": {
+      "v": 1,
+      "tenantId": "newco",
+      "rows": [],
+      "page": { "limit": 20, "offset": 0, "total": 0 }
+    }
+  },
+
+  "GET /v1/tenants/{tenantId}/review-queue": {
+    "populated": {
+      "v": 1,
+      "tenantId": "kfel",
+      "rows": [
+        {
+          "conversationId": "thread-3",
+          "customerEmail": "purchasing@initech.test",
+          "quotationNumber": "QUO-20260705-0002",
+          "total": { "amount": 1840000, "currency": "INR" },
+          "lineCount": 2,
+          "hasMissingPrices": false,
+          "waitingSinceAt": "2026-07-05T07:00:00.000Z"
+        },
+        {
+          "conversationId": "thread-5",
+          "customerEmail": "buyer@acme.test",
+          "quotationNumber": "QUO-20260705-0003",
+          "total": null,
+          "lineCount": 3,
+          "hasMissingPrices": true,
+          "waitingSinceAt": "2026-07-05T06:15:00.000Z"
+        }
+      ]
+    },
+    "empty": {
+      "v": 1,
+      "tenantId": "newco",
+      "rows": []
+    }
+  },
+
+  "errors": {
+    "400_bad_window": {
+      "status": 400,
+      "body": { "error": "invalid_window", "message": "`from` must be before `to`" }
+    },
+    "401_missing_token": {
+      "status": 401,
+      "body": { "error": "unauthenticated", "message": "missing or invalid bearer token" }
+    },
+    "403_tenant_mismatch": {
+      "status": 403,
+      "body": { "error": "tenant_forbidden", "message": "token is not scoped to this tenant" }
+    },
+    "404_unknown_tenant": {
+      "status": 404,
+      "body": { "error": "unknown_tenant", "message": "no such tenant" }
+    },
+    "503_unavailable": {
+      "status": 503,
+      "body": { "error": "unavailable", "message": "metrics temporarily unavailable, retry" }
+    }
+  }
+}
