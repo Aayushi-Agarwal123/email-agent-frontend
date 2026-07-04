@@ -104,6 +104,9 @@ export const MetricsActivityPointV1 = z
     date: z.string(),
     received: nonNegInt,
     released: nonNegInt,
+    valueReleased: z.number().nonnegative(),
+    straightThroughRate: z.number().min(0).max(1),
+    medianTimeToQuoteMinutes: z.number().nonnegative().nullable(),
   })
   .strict();
 export type MetricsActivityPointV1 = z.infer<typeof MetricsActivityPointV1>;

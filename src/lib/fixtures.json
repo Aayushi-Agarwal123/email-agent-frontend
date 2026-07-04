@@ -1,6 +1,5 @@
 {
   "_readme": "Mock payloads for the Metrics Export API v1. Every payload here validates against src/dashboard/metrics-contract.ts. Build the dashboard against these with zero backend: serve them from MSW/json-server keyed by the endpoint paths below, then point at the real API by swapping the base URL. Each endpoint has a 'populated' and an 'empty' (fresh-tenant) scenario; the 'errors' block shows the non-200 shapes to handle.",
-
   "GET /v1/tenants/{tenantId}/metrics/overview": {
     "populated": {
       "v": 1,
@@ -11,17 +10,35 @@
         "granularity": "day"
       },
       "kpis": {
-        "quotesReleased": { "value": 12, "deltaPct": 12.4 },
-        "valueReleased": { "value": { "amount": 1840000, "currency": "INR" }, "deltaPct": -4.2 },
-        "straightThroughRate": { "value": 0.72, "deltaPts": 5 },
-        "medianTimeToQuoteMinutes": { "value": 34, "deltaPct": -18 }
+        "quotesReleased": {
+          "value": 12,
+          "deltaPct": 12.4
+        },
+        "valueReleased": {
+          "value": {
+            "amount": 1840000,
+            "currency": "INR"
+          },
+          "deltaPct": -4.2
+        },
+        "straightThroughRate": {
+          "value": 0.72,
+          "deltaPts": 5
+        },
+        "medianTimeToQuoteMinutes": {
+          "value": 34,
+          "deltaPct": -18
+        }
       },
       "secondary": {
         "clarificationRate": 0.18,
         "avgClarificationRounds": 0.4,
         "escalationRate": 0.1,
         "medianApprovalTimeMinutes": 180,
-        "valueAwaitingApproval": { "amount": 250000, "currency": "INR" }
+        "valueAwaitingApproval": {
+          "amount": 250000,
+          "currency": "INR"
+        }
       },
       "funnel": {
         "total": 20,
@@ -33,16 +50,64 @@
         "ignored": 7
       },
       "escalationReasons": [
-        { "reason": "no_match", "count": 1 },
-        { "reason": "ambiguous", "count": 1 }
+        {
+          "reason": "no_match",
+          "count": 1
+        },
+        {
+          "reason": "ambiguous",
+          "count": 1
+        }
       ],
       "activity": [
-        { "date": "2026-06-30", "received": 2, "released": 1 },
-        { "date": "2026-07-01", "received": 3, "released": 2 },
-        { "date": "2026-07-02", "received": 1, "released": 1 },
-        { "date": "2026-07-03", "received": 4, "released": 3 },
-        { "date": "2026-07-04", "received": 1, "released": 1 },
-        { "date": "2026-07-05", "received": 2, "released": 0 }
+        {
+          "date": "2026-06-30",
+          "received": 2,
+          "released": 1,
+          "valueReleased": 230000,
+          "straightThroughRate": 0.5,
+          "medianTimeToQuoteMinutes": 50
+        },
+        {
+          "date": "2026-07-01",
+          "received": 3,
+          "released": 2,
+          "valueReleased": 460000,
+          "straightThroughRate": 0.6667,
+          "medianTimeToQuoteMinutes": 44
+        },
+        {
+          "date": "2026-07-02",
+          "received": 1,
+          "released": 1,
+          "valueReleased": 230000,
+          "straightThroughRate": 1.0,
+          "medianTimeToQuoteMinutes": 38
+        },
+        {
+          "date": "2026-07-03",
+          "received": 4,
+          "released": 3,
+          "valueReleased": 690000,
+          "straightThroughRate": 0.75,
+          "medianTimeToQuoteMinutes": 32
+        },
+        {
+          "date": "2026-07-04",
+          "received": 1,
+          "released": 1,
+          "valueReleased": 230000,
+          "straightThroughRate": 1.0,
+          "medianTimeToQuoteMinutes": 26
+        },
+        {
+          "date": "2026-07-05",
+          "received": 2,
+          "released": 0,
+          "valueReleased": 0,
+          "straightThroughRate": 0.0,
+          "medianTimeToQuoteMinutes": null
+        }
       ],
       "reviewQueueCount": 2,
       "health": {
@@ -62,17 +127,35 @@
         "granularity": "day"
       },
       "kpis": {
-        "quotesReleased": { "value": 0, "deltaPct": null },
-        "valueReleased": { "value": { "amount": 0, "currency": "INR" }, "deltaPct": null },
-        "straightThroughRate": { "value": 0, "deltaPts": null },
-        "medianTimeToQuoteMinutes": { "value": null, "deltaPct": null }
+        "quotesReleased": {
+          "value": 0,
+          "deltaPct": null
+        },
+        "valueReleased": {
+          "value": {
+            "amount": 0,
+            "currency": "INR"
+          },
+          "deltaPct": null
+        },
+        "straightThroughRate": {
+          "value": 0,
+          "deltaPts": null
+        },
+        "medianTimeToQuoteMinutes": {
+          "value": null,
+          "deltaPct": null
+        }
       },
       "secondary": {
         "clarificationRate": 0,
         "avgClarificationRounds": 0,
         "escalationRate": 0,
         "medianApprovalTimeMinutes": null,
-        "valueAwaitingApproval": { "amount": 0, "currency": "INR" }
+        "valueAwaitingApproval": {
+          "amount": 0,
+          "currency": "INR"
+        }
       },
       "funnel": {
         "total": 0,
@@ -85,9 +168,30 @@
       },
       "escalationReasons": [],
       "activity": [
-        { "date": "2026-07-03", "received": 0, "released": 0 },
-        { "date": "2026-07-04", "received": 0, "released": 0 },
-        { "date": "2026-07-05", "received": 0, "released": 0 }
+        {
+          "date": "2026-07-03",
+          "received": 0,
+          "released": 0,
+          "valueReleased": 0,
+          "straightThroughRate": 0,
+          "medianTimeToQuoteMinutes": null
+        },
+        {
+          "date": "2026-07-04",
+          "received": 0,
+          "released": 0,
+          "valueReleased": 0,
+          "straightThroughRate": 0,
+          "medianTimeToQuoteMinutes": null
+        },
+        {
+          "date": "2026-07-05",
+          "received": 0,
+          "released": 0,
+          "valueReleased": 0,
+          "straightThroughRate": 0,
+          "medianTimeToQuoteMinutes": null
+        }
       ],
       "reviewQueueCount": 0,
       "health": {
@@ -99,7 +203,6 @@
       }
     }
   },
-
   "GET /v1/tenants/{tenantId}/conversations?limit=20&offset=0": {
     "populated": {
       "v": 1,
@@ -146,16 +249,23 @@
           "lastActivityAt": "2026-07-04T18:00:00.000Z"
         }
       ],
-      "page": { "limit": 20, "offset": 0, "total": 4 }
+      "page": {
+        "limit": 20,
+        "offset": 0,
+        "total": 4
+      }
     },
     "empty": {
       "v": 1,
       "tenantId": "newco",
       "rows": [],
-      "page": { "limit": 20, "offset": 0, "total": 0 }
+      "page": {
+        "limit": 20,
+        "offset": 0,
+        "total": 0
+      }
     }
   },
-
   "GET /v1/tenants/{tenantId}/quotations?limit=20&offset=0": {
     "populated": {
       "v": 1,
@@ -165,7 +275,10 @@
           "quotationNumber": "QUO-20260705-0001",
           "conversationId": "thread-1",
           "customerEmail": "buyer@acme.test",
-          "total": { "amount": 250000, "currency": "INR" },
+          "total": {
+            "amount": 250000,
+            "currency": "INR"
+          },
           "status": "released",
           "lineCount": 2,
           "updatedAt": "2026-07-05T09:30:00.000Z",
@@ -175,23 +288,33 @@
           "quotationNumber": "QUO-20260705-0002",
           "conversationId": "thread-3",
           "customerEmail": "purchasing@initech.test",
-          "total": { "amount": 1840000, "currency": "INR" },
+          "total": {
+            "amount": 1840000,
+            "currency": "INR"
+          },
           "status": "awaiting_review",
           "lineCount": 2,
           "updatedAt": "2026-07-05T07:00:00.000Z",
           "releasedAt": null
         }
       ],
-      "page": { "limit": 20, "offset": 0, "total": 2 }
+      "page": {
+        "limit": 20,
+        "offset": 0,
+        "total": 2
+      }
     },
     "empty": {
       "v": 1,
       "tenantId": "newco",
       "rows": [],
-      "page": { "limit": 20, "offset": 0, "total": 0 }
+      "page": {
+        "limit": 20,
+        "offset": 0,
+        "total": 0
+      }
     }
   },
-
   "GET /v1/tenants/{tenantId}/review-queue": {
     "populated": {
       "v": 1,
@@ -201,7 +324,10 @@
           "conversationId": "thread-3",
           "customerEmail": "purchasing@initech.test",
           "quotationNumber": "QUO-20260705-0002",
-          "total": { "amount": 1840000, "currency": "INR" },
+          "total": {
+            "amount": 1840000,
+            "currency": "INR"
+          },
           "lineCount": 2,
           "hasMissingPrices": false,
           "waitingSinceAt": "2026-07-05T07:00:00.000Z"
@@ -223,27 +349,41 @@
       "rows": []
     }
   },
-
   "errors": {
     "400_bad_window": {
       "status": 400,
-      "body": { "error": "invalid_window", "message": "`from` must be before `to`" }
+      "body": {
+        "error": "invalid_window",
+        "message": "`from` must be before `to`"
+      }
     },
     "401_missing_token": {
       "status": 401,
-      "body": { "error": "unauthenticated", "message": "missing or invalid bearer token" }
+      "body": {
+        "error": "unauthenticated",
+        "message": "missing or invalid bearer token"
+      }
     },
     "403_tenant_mismatch": {
       "status": 403,
-      "body": { "error": "tenant_forbidden", "message": "token is not scoped to this tenant" }
+      "body": {
+        "error": "tenant_forbidden",
+        "message": "token is not scoped to this tenant"
+      }
     },
     "404_unknown_tenant": {
       "status": 404,
-      "body": { "error": "unknown_tenant", "message": "no such tenant" }
+      "body": {
+        "error": "unknown_tenant",
+        "message": "no such tenant"
+      }
     },
     "503_unavailable": {
       "status": 503,
-      "body": { "error": "unavailable", "message": "metrics temporarily unavailable, retry" }
+      "body": {
+        "error": "unavailable",
+        "message": "metrics temporarily unavailable, retry"
+      }
     }
   }
 }
