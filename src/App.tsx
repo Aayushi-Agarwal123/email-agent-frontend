@@ -82,7 +82,6 @@ export default function App() {
     <div className="min-h-screen bg-background font-sans text-foreground">
       <TopBar
         tenantName={TENANT_NAME}
-        tenantId={TENANT_ID}
         health={overview.health}
         reviewQueueCount={overview.reviewQueueCount}
         view={view}
