@@ -35,12 +35,7 @@ static host (we use **Vercel**).
 
 ## How it fits in the system
 
-```
-Browser (this app)  ──HTTPS──▶  BFF  (metrics + auth + onboarding + uploads API)
-       │                          │
-   Google Identity                └── Postgres  ◀── Agent daemon (Gmail polling + quoting)
-   Services (login)
-```
+![How the dashboard fits into the system](diagrams/how-it-fits.svg)
 
 The UI only ever calls the **BFF**. It never touches Postgres, Gmail, or the
 agent daemon directly. Tenant isolation and all business logic live server‑side;
