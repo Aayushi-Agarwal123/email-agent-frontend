@@ -4,7 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { FileTree } from "@/components/file-tree";
-import { CheckCircle2Icon, CircleIcon, Loader2Icon, MailIcon, UploadIcon } from "lucide-react";
+import { CheckCircle2Icon, CircleIcon, Loader2Icon, LogOutIcon, MailIcon, UploadIcon } from "lucide-react";
+import { useAuth } from "@/lib/auth";
 import {
   fetchOnboarding,
   fetchUploads,
@@ -54,6 +55,7 @@ function StepBadge({ done }: { done: boolean }) {
 }
 
 export function OnboardingWizard({ tenantId, onDone }: { tenantId: string; onDone: () => void }) {
+  const { session, live, logout } = useAuth();
   const [onb, setOnb] = useState<OnboardingState | null>(null);
   const [tree, setTree] = useState<TreeNode[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -175,10 +177,23 @@ export function OnboardingWizard({ tenantId, onDone }: { tenantId: string; onDon
   return (
     <div className="min-h-screen bg-background font-sans text-foreground">
       <div className="mx-auto max-w-2xl space-y-6 px-4 py-10">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Welcome — let's set up your quoting agent</h1>
-          <p className="text-muted-foreground">Three quick steps and your agent starts handling quotes.</p>
-          {IS_DEMO && <p className="mt-1 text-xs text-muted-foreground">(Preview mode — steps are simulated.)</p>}
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight">Welcome — let's set up your quoting agent</h1>
+            <p className="text-muted-foreground">Three quick steps and your agent starts handling quotes.</p>
+            {IS_DEMO && <p className="mt-1 text-xs text-muted-foreground">(Preview mode — steps are simulated.)</p>}
+            {live && session?.email && <p className="mt-1 text-xs text-muted-foreground">Signed in as {session.email}</p>}
+          </div>
+          {live && (
+            <button
+              type="button"
+              onClick={logout}
+              title={session?.email ? `Sign out (${session.email})` : "Sign out"}
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-md px-2 py-1.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
+            >
+              <LogOutIcon className="h-4 w-4" /> Sign out
+            </button>
+          )}
         </div>
 
         {error && <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</div>}
