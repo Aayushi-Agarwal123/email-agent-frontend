@@ -7,10 +7,13 @@ import type {
   MetricsReviewQueueV1,
 } from './metrics-contract';
 
-// Live mode when VITE_API_BASE_URL is set (the metrics BFF); otherwise serve the
-// bundled populated fixtures so the whole UI builds and previews with no backend.
-const BASE = import.meta.env.VITE_API_BASE_URL as string | undefined;
-export const IS_LIVE = Boolean(BASE);
+// VITE_API_BASE_URL controls live vs demo and the API base:
+//   unset/empty → fixture/demo mode (no backend)
+//   "/"         → live, SAME-ORIGIN: relative URLs, no CORS (BFF serves the UI)
+//   full URL    → live, cross-origin: used verbatim
+const RAW_BASE = import.meta.env.VITE_API_BASE_URL as string | undefined;
+export const IS_LIVE = Boolean(RAW_BASE);
+const BASE = RAW_BASE && RAW_BASE !== "/" ? RAW_BASE : "";
 
 export interface Session {
   token: string;
@@ -37,7 +40,7 @@ export function clearSession(): void {
 const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 async function req<T>(path: string, fixture: T, init?: RequestInit): Promise<T> {
-  if (BASE) {
+  if (IS_LIVE) {
     const token = getSession()?.token;
     const res = await fetch(`${BASE}${path}`, {
       ...init,
@@ -72,7 +75,7 @@ async function safeText(res: Response): Promise<string> {
 // A 401 in live mode means the session is missing/expired — clear it and signal
 // the app to return to login, so an expired token doesn't wedge the dashboard.
 function onUnauthorized(): void {
-  if (!BASE) return;
+  if (!IS_LIVE) return;
   clearSession();
   window.dispatchEvent(new Event("dashboard:unauthorized"));
 }
@@ -99,7 +102,7 @@ export function fetchReviewQueue(tenantId: string): Promise<MetricsReviewQueueV1
 // ── Auth ─────────────────────────────────────────────────────────────────────
 
 export async function postAuthSession(idToken: string): Promise<Session> {
-  if (!BASE) throw new ApiError(0, 'login requires a live backend');
+  if (!IS_LIVE) throw new ApiError(0, 'login requires a live backend');
   const res = await fetch(`${BASE}/auth/session`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -119,7 +122,7 @@ export interface SettingsData {
 let demoReviewer: string | null = 'reviewer@kfel.com';
 
 export async function fetchSettings(tenantId: string): Promise<SettingsData> {
-  if (!BASE) {
+  if (!IS_LIVE) {
     await delay(150);
     return { reviewerEmail: demoReviewer };
   }
@@ -128,7 +131,7 @@ export async function fetchSettings(tenantId: string): Promise<SettingsData> {
 }
 
 export async function updateReviewerEmail(tenantId: string, reviewerEmail: string): Promise<SettingsData> {
-  if (!BASE) {
+  if (!IS_LIVE) {
     await delay(150);
     demoReviewer = reviewerEmail.trim().toLowerCase();
     return { reviewerEmail: demoReviewer };
@@ -194,14 +197,14 @@ const demoOnb: OnboardingState = {
 let demoTree: TreeNode[] = [];
 
 export async function fetchOnboarding(tenantId: string): Promise<OnboardingState> {
-  if (!BASE) {
+  if (!IS_LIVE) {
     await delay(150);
     return { ...demoOnb };
   }
   return authed(`/v1/tenants/${tenantId}/onboarding`, "GET");
 }
 export async function saveOnboardingProfile(tenantId: string, p: ProfileInput): Promise<OnboardingState> {
-  if (!BASE) {
+  if (!IS_LIVE) {
     await delay(150);
     Object.assign(demoOnb, { displayName: p.displayName, currency: p.currency.toUpperCase(), priceBasis: p.priceBasis, validityDays: p.validityDays, reviewerEmail: p.reviewerEmail });
     return { ...demoOnb };
@@ -209,7 +212,7 @@ export async function saveOnboardingProfile(tenantId: string, p: ProfileInput): 
   return authed(`/v1/tenants/${tenantId}/onboarding/profile`, "PUT", p);
 }
 export async function completeOnboarding(tenantId: string): Promise<OnboardingState> {
-  if (!BASE) {
+  if (!IS_LIVE) {
     await delay(150);
     demoOnb.onboarded = true;
     return { ...demoOnb };
@@ -223,10 +226,10 @@ export async function connectGmail(tenantId: string, code: string, redirectUri: 
 export function connectGmailDemo(): void {
   demoOnb.gmailConnected = true;
 }
-export const IS_DEMO = !BASE;
+export const IS_DEMO = !IS_LIVE;
 
 export async function uploadFile(tenantId: string, file: File): Promise<{ tree: TreeNode[] }> {
-  if (!BASE) {
+  if (!IS_LIVE) {
     await delay(300);
     if (!demoTree.some((n) => n.name === file.name)) demoTree = [...demoTree, { name: file.name, type: "file", size: file.size }];
     demoOnb.hasData = true;
@@ -242,7 +245,7 @@ export async function uploadFile(tenantId: string, file: File): Promise<{ tree: 
   return (await res.json()) as { tree: TreeNode[] };
 }
 export async function fetchUploads(tenantId: string): Promise<{ tree: TreeNode[] }> {
-  if (!BASE) {
+  if (!IS_LIVE) {
     await delay(150);
     return { tree: demoTree };
   }
