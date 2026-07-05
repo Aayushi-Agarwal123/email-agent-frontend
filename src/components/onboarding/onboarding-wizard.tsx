@@ -22,6 +22,29 @@ import {
 const GMAIL_CLIENT = (import.meta.env.VITE_GMAIL_CLIENT_ID ?? import.meta.env.VITE_GOOGLE_CLIENT_ID) as string | undefined;
 const GMAIL_SCOPE = "openid email https://www.googleapis.com/auth/gmail.modify";
 
+const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+
+const CURRENCIES: { code: string; name: string; flag: string }[] = [
+  { code: "PHP", name: "Philippine Peso", flag: "🇵🇭" },
+  { code: "USD", name: "US Dollar", flag: "🇺🇸" },
+  { code: "INR", name: "Indian Rupee", flag: "🇮🇳" },
+  { code: "EUR", name: "Euro", flag: "🇪🇺" },
+  { code: "GBP", name: "British Pound", flag: "🇬🇧" },
+  { code: "AED", name: "UAE Dirham", flag: "🇦🇪" },
+  { code: "SGD", name: "Singapore Dollar", flag: "🇸🇬" },
+  { code: "MYR", name: "Malaysian Ringgit", flag: "🇲🇾" },
+  { code: "AUD", name: "Australian Dollar", flag: "🇦🇺" },
+  { code: "CAD", name: "Canadian Dollar", flag: "🇨🇦" },
+  { code: "JPY", name: "Japanese Yen", flag: "🇯🇵" },
+  { code: "CNY", name: "Chinese Yuan", flag: "🇨🇳" },
+  { code: "SAR", name: "Saudi Riyal", flag: "🇸🇦" },
+  { code: "ZAR", name: "South African Rand", flag: "🇿🇦" },
+];
+
+function Req() {
+  return <span className="text-destructive"> *</span>;
+}
+
 function StepBadge({ done }: { done: boolean }) {
   return done ? (
     <CheckCircle2Icon className="h-5 w-5 text-emerald-500" />
@@ -48,9 +71,9 @@ export function OnboardingWizard({ tenantId, onDone }: { tenantId: string; onDon
 
   // Profile form state
   const [displayName, setDisplayName] = useState("");
-  const [currency, setCurrency] = useState("INR");
-  const [priceBasis, setPriceBasis] = useState("Ex-works");
-  const [validityDays, setValidityDays] = useState("30");
+  const [currency, setCurrency] = useState("");
+  const [priceBasis, setPriceBasis] = useState("");
+  const [validityDays, setValidityDays] = useState("");
   const [reviewerEmail, setReviewerEmail] = useState("");
 
   useEffect(() => {
@@ -74,6 +97,8 @@ export function OnboardingWizard({ tenantId, onDone }: { tenantId: string; onDon
   const gmailDone = onb.gmailConnected;
   const dataDone = onb.hasData;
   const allDone = profileDone && gmailDone && dataDone;
+  // Client-side gate for the profile save: the three mandatory fields.
+  const profileValid = displayName.trim().length > 0 && currency.length === 3 && EMAIL_RE.test(reviewerEmail.trim());
 
   const saveProfile = async () => {
     setBusy(true);
@@ -169,27 +194,51 @@ export function OnboardingWizard({ tenantId, onDone }: { tenantId: string; onDon
           </CardHeader>
           <CardContent className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2 sm:col-span-2">
-              <Label htmlFor="name">Business name</Label>
-              <Input id="name" value={displayName} onChange={(e) => setDisplayName(e.target.value)} placeholder="K-Fel Valves" />
+              <Label htmlFor="name">Business name<Req /></Label>
+              <Input id="name" value={displayName} onChange={(e) => setDisplayName(e.target.value)} placeholder="Golden Steel Supplier Co" />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="currency">Currency (ISO)</Label>
-              <Input id="currency" value={currency} onChange={(e) => setCurrency(e.target.value.toUpperCase())} maxLength={3} placeholder="INR" />
+              <Label htmlFor="currency">Currency<Req /></Label>
+              <select
+                id="currency"
+                value={currency}
+                onChange={(e) => setCurrency(e.target.value)}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring"
+              >
+                <option value="" disabled>
+                  Select currency…
+                </option>
+                {CURRENCIES.map((c) => (
+                  <option key={c.code} value={c.code}>
+                    {c.flag} {c.code} — {c.name}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="basis">Price basis</Label>
-              <Input id="basis" value={priceBasis} onChange={(e) => setPriceBasis(e.target.value)} placeholder="Ex-works" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="validity">Quote validity (days)</Label>
-              <Input id="validity" type="number" value={validityDays} onChange={(e) => setValidityDays(e.target.value)} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="rev">Reviewer email</Label>
+              <Label htmlFor="rev">Reviewer email<Req /></Label>
               <Input id="rev" type="email" value={reviewerEmail} onChange={(e) => setReviewerEmail(e.target.value)} placeholder="boss@company.com" />
             </div>
-            <div className="sm:col-span-2">
-              <Button onClick={saveProfile} disabled={busy}>Save profile</Button>
+            <div className="space-y-2">
+              <Label htmlFor="basis">
+                Price basis <span className="text-xs font-normal text-muted-foreground">(optional)</span>
+              </Label>
+              <Input id="basis" value={priceBasis} onChange={(e) => setPriceBasis(e.target.value)} placeholder="e.g. Ex-works" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="validity">
+                Quote validity in days <span className="text-xs font-normal text-muted-foreground">(optional)</span>
+              </Label>
+              <Input id="validity" type="number" value={validityDays} onChange={(e) => setValidityDays(e.target.value)} placeholder="30" />
+            </div>
+            <div className="flex flex-wrap items-center gap-3 sm:col-span-2">
+              <Button onClick={saveProfile} disabled={busy || !profileValid}>
+                Save profile
+              </Button>
+              {!profileValid && (
+                <span className="text-xs text-muted-foreground">Business name, currency and reviewer email are required.</span>
+              )}
+              {profileDone && <span className="text-xs text-emerald-600 dark:text-emerald-400">Saved.</span>}
             </div>
           </CardContent>
         </Card>
