@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/lib/auth";
 import { ApiError } from "@/lib/api";
+import { ensureGoogleScript, google } from "@/lib/google";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
 export function Login() {
   const { login } = useAuth();
   const ref = useRef<HTMLDivElement>(null);
@@ -26,22 +26,14 @@ export function Login() {
         }
       }
     };
-    const init = () => {
-      const g = (window as any).google;
-      if (!g?.accounts?.id) return;
-      g.accounts.id.initialize({ client_id: clientId, callback: handle });
-      if (ref.current) g.accounts.id.renderButton(ref.current, { theme: "outline", size: "large", width: 280 });
-    };
-    if ((window as any).google) {
-      init();
-      return;
-    }
-    const s = document.createElement("script");
-    s.src = "https://accounts.google.com/gsi/client";
-    s.async = true;
-    s.defer = true;
-    s.onload = init;
-    document.body.appendChild(s);
+    ensureGoogleScript()
+      .then(() => {
+        const g = google();
+        if (!g?.accounts?.id) return;
+        g.accounts.id.initialize({ client_id: clientId, callback: handle });
+        if (ref.current) g.accounts.id.renderButton(ref.current, { theme: "outline", size: "large", width: 280 });
+      })
+      .catch(() => setError("Couldn't load Google sign-in. Reload and try again."));
   }, [clientId, login]);
 
   return (

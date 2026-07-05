@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { FileTree } from "@/components/file-tree";
 import { CheckCircle2Icon, CircleIcon, Loader2Icon, LogOutIcon, MailIcon, UploadIcon } from "lucide-react";
 import { useAuth } from "@/lib/auth";
+import { ensureGoogleScript, google } from "@/lib/google";
 import {
   fetchOnboarding,
   fetchUploads,
@@ -115,15 +116,25 @@ export function OnboardingWizard({ tenantId, onDone }: { tenantId: string; onDon
     }
   };
 
-  const connectGmailFlow = () => {
+  const connectGmailFlow = async () => {
     setError(null);
     if (IS_DEMO) {
       connectGmailDemo();
       refresh();
       return;
     }
-    const g = (window as any).google;
-    if (!g?.accounts?.oauth2 || !GMAIL_CLIENT) {
+    if (!GMAIL_CLIENT) {
+      setError("Dashboard is missing its Google client id (VITE_GOOGLE_CLIENT_ID).");
+      return;
+    }
+    try {
+      await ensureGoogleScript();
+    } catch {
+      setError("Couldn't load Google sign-in — check your connection and reload.");
+      return;
+    }
+    const g = google();
+    if (!g?.accounts?.oauth2) {
       setError("Google sign-in isn't available. Reload and try again.");
       return;
     }
