@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { KpiCards } from "@/components/dashboard/kpi-cards";
 import { DashboardCharts } from "@/components/dashboard/charts";
 import { DashboardLists } from "@/components/dashboard/lists";
@@ -18,8 +18,6 @@ import type {
 } from "@/lib/metrics-contract";
 import { Loader2Icon } from "lucide-react";
 
-const TENANT_NAME = "K-Fel Valves";
-
 export default function App() {
   const { session, live, logout } = useAuth();
   const tenantId = session?.tenantId ?? "kfel";
@@ -32,18 +30,22 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [onboarded, setOnboarded] = useState<boolean | null>(null);
+  const [displayName, setDisplayName] = useState<string | null>(null);
 
-  // First-time detection: gate the dashboard behind the onboarding wizard.
+  // First-time detection: gate the dashboard behind the onboarding wizard, and
+  // pick up the tenant's real display name for the top bar.
+  const loadOnboarding = useCallback(async () => {
+    try {
+      const s = await fetchOnboarding(tenantId);
+      setDisplayName(s.displayName);
+      setOnboarded(s.onboarded);
+    } catch {
+      setOnboarded(true); // don't block the dashboard if onboarding isn't enabled
+    }
+  }, [tenantId]);
   useEffect(() => {
-    if (!session) return;
-    let alive = true;
-    fetchOnboarding(tenantId)
-      .then((s) => alive && setOnboarded(s.onboarded))
-      .catch(() => alive && setOnboarded(true)); // don't block the dashboard if onboarding isn't enabled
-    return () => {
-      alive = false;
-    };
-  }, [session, tenantId]);
+    if (session) loadOnboarding();
+  }, [session, loadOnboarding]);
 
   useEffect(() => {
     if (!session || onboarded !== true) return;
@@ -88,7 +90,7 @@ export default function App() {
     );
   }
   if (session && onboarded === false) {
-    return <OnboardingWizard tenantId={tenantId} onDone={() => setOnboarded(true)} />;
+    return <OnboardingWizard tenantId={tenantId} onDone={loadOnboarding} />;
   }
 
   if (loading && !overview) {
@@ -115,7 +117,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-background font-sans text-foreground">
       <TopBar
-        tenantName={TENANT_NAME}
+        tenantName={displayName ?? tenantId}
         health={overview.health}
         reviewQueueCount={overview.reviewQueueCount}
         view={view}
