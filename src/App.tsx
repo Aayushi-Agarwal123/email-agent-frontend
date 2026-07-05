@@ -7,8 +7,9 @@ import { TopBar, type View } from "@/components/top-bar";
 import { CatalogPage } from "@/components/catalog/catalog-page";
 import { SettingsPage } from "@/components/settings/settings-page";
 import { Login } from "@/components/login";
+import { OnboardingWizard } from "@/components/onboarding/onboarding-wizard";
 import { useAuth } from "@/lib/auth";
-import { fetchOverview, fetchConversations, fetchQuotations, fetchReviewQueue } from "@/lib/api";
+import { fetchOverview, fetchConversations, fetchQuotations, fetchReviewQueue, fetchOnboarding } from "@/lib/api";
 import type {
   MetricsOverviewV1,
   MetricsConversationsPageV1,
@@ -30,9 +31,22 @@ export default function App() {
   const [reviewQueue, setReviewQueue] = useState<MetricsReviewQueueV1 | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [onboarded, setOnboarded] = useState<boolean | null>(null);
 
+  // First-time detection: gate the dashboard behind the onboarding wizard.
   useEffect(() => {
     if (!session) return;
+    let alive = true;
+    fetchOnboarding(tenantId)
+      .then((s) => alive && setOnboarded(s.onboarded))
+      .catch(() => alive && setOnboarded(true)); // don't block the dashboard if onboarding isn't enabled
+    return () => {
+      alive = false;
+    };
+  }, [session, tenantId]);
+
+  useEffect(() => {
+    if (!session || onboarded !== true) return;
     let alive = true;
     const load = async () => {
       try {
@@ -61,10 +75,21 @@ export default function App() {
       alive = false;
       clearInterval(interval);
     };
-  }, [session, tenantId]);
+  }, [session, tenantId, onboarded]);
 
   // Live mode requires a real login; fixture/preview mode runs as a demo session.
   if (live && !session) return <Login />;
+
+  if (session && onboarded === null) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-background">
+        <Loader2Icon className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+  if (session && onboarded === false) {
+    return <OnboardingWizard tenantId={tenantId} onDone={() => setOnboarded(true)} />;
+  }
 
   if (loading && !overview) {
     return (

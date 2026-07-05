@@ -131,6 +131,112 @@ export async function updateReviewerEmail(tenantId: string, reviewerEmail: strin
   return { reviewerEmail: data.reviewerEmail };
 }
 
+// ── Onboarding ────────────────────────────────────────────────────────────────
+
+export interface TreeNode {
+  name: string;
+  type: "file" | "dir";
+  size?: number;
+  children?: TreeNode[];
+}
+export interface OnboardingState {
+  onboarded: boolean;
+  gmailConnected: boolean;
+  hasData: boolean;
+  displayName: string | null;
+  currency: string | null;
+  priceBasis: string | null;
+  validityDays: number | null;
+  reviewerEmail: string | null;
+}
+export interface ProfileInput {
+  displayName: string;
+  currency: string;
+  priceBasis: string;
+  validityDays: number;
+  reviewerEmail: string;
+}
+
+async function authed<T>(path: string, method: string, body?: unknown): Promise<T> {
+  const token = getSession()?.token;
+  const res = await fetch(`${BASE}${path}`, {
+    method,
+    headers: { ...(body ? { "Content-Type": "application/json" } : {}), ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  if (!res.ok) throw new ApiError(res.status, await safeText(res));
+  return (await res.json()) as T;
+}
+
+// Demo (fixture-mode) onboarding state, so the whole wizard is previewable offline.
+const demoOnb: OnboardingState = {
+  onboarded: false,
+  gmailConnected: false,
+  hasData: false,
+  displayName: null,
+  currency: null,
+  priceBasis: null,
+  validityDays: null,
+  reviewerEmail: null,
+};
+let demoTree: TreeNode[] = [];
+
+export async function fetchOnboarding(tenantId: string): Promise<OnboardingState> {
+  if (!BASE) {
+    await delay(150);
+    return { ...demoOnb };
+  }
+  return authed(`/v1/tenants/${tenantId}/onboarding`, "GET");
+}
+export async function saveOnboardingProfile(tenantId: string, p: ProfileInput): Promise<OnboardingState> {
+  if (!BASE) {
+    await delay(150);
+    Object.assign(demoOnb, { displayName: p.displayName, currency: p.currency.toUpperCase(), priceBasis: p.priceBasis, validityDays: p.validityDays, reviewerEmail: p.reviewerEmail });
+    return { ...demoOnb };
+  }
+  return authed(`/v1/tenants/${tenantId}/onboarding/profile`, "PUT", p);
+}
+export async function completeOnboarding(tenantId: string): Promise<OnboardingState> {
+  if (!BASE) {
+    await delay(150);
+    demoOnb.onboarded = true;
+    return { ...demoOnb };
+  }
+  return authed(`/v1/tenants/${tenantId}/onboarding/complete`, "POST");
+}
+export async function connectGmail(tenantId: string, code: string, redirectUri: string): Promise<{ connected: boolean; address: string }> {
+  return authed(`/v1/tenants/${tenantId}/gmail/connect`, "POST", { code, redirectUri });
+}
+/** Demo-mode Gmail "connect" (no real OAuth in fixture preview). */
+export function connectGmailDemo(): void {
+  demoOnb.gmailConnected = true;
+}
+export const IS_DEMO = !BASE;
+
+export async function uploadFile(tenantId: string, file: File): Promise<{ tree: TreeNode[] }> {
+  if (!BASE) {
+    await delay(300);
+    if (!demoTree.some((n) => n.name === file.name)) demoTree = [...demoTree, { name: file.name, type: "file", size: file.size }];
+    demoOnb.hasData = true;
+    return { tree: demoTree };
+  }
+  const token = getSession()?.token;
+  const res = await fetch(`${BASE}/v1/tenants/${tenantId}/uploads?filename=${encodeURIComponent(file.name)}`, {
+    method: "PUT",
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    body: file,
+  });
+  if (!res.ok) throw new ApiError(res.status, await safeText(res));
+  return (await res.json()) as { tree: TreeNode[] };
+}
+export async function fetchUploads(tenantId: string): Promise<{ tree: TreeNode[] }> {
+  if (!BASE) {
+    await delay(150);
+    return { tree: demoTree };
+  }
+  return authed(`/v1/tenants/${tenantId}/uploads`, "GET");
+}
+
 // ── Catalog (RAG-owned; fixture-backed until its endpoint exists) ────────────
 
 export interface CatalogRow {
