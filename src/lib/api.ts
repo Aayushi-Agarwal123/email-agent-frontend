@@ -47,7 +47,7 @@ async function req<T>(path: string, fixture: T, init?: RequestInit): Promise<T> 
         ...(init?.headers ?? {}),
       },
     });
-    if (!res.ok) throw new ApiError(res.status, await safeText(res));
+    if (!res.ok) return fail(res);
     return (await res.json()) as T;
   }
   await delay(200);
@@ -67,6 +67,18 @@ async function safeText(res: Response): Promise<string> {
   } catch {
     return res.statusText;
   }
+}
+
+// A 401 in live mode means the session is missing/expired — clear it and signal
+// the app to return to login, so an expired token doesn't wedge the dashboard.
+function onUnauthorized(): void {
+  if (!BASE) return;
+  clearSession();
+  window.dispatchEvent(new Event("dashboard:unauthorized"));
+}
+async function fail(res: Response): Promise<never> {
+  if (res.status === 401) onUnauthorized();
+  throw new ApiError(res.status, await safeText(res));
 }
 
 const F = fixtures as unknown as Record<string, { populated: unknown }>;
@@ -126,7 +138,7 @@ export async function updateReviewerEmail(tenantId: string, reviewerEmail: strin
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getSession()?.token ?? ''}` },
     body: JSON.stringify({ reviewerEmail }),
   });
-  if (!res.ok) throw new ApiError(res.status, await safeText(res));
+  if (!res.ok) return fail(res);
   const data = (await res.json()) as { reviewerEmail: string | null };
   return { reviewerEmail: data.reviewerEmail };
 }
@@ -164,7 +176,7 @@ async function authed<T>(path: string, method: string, body?: unknown): Promise<
     headers: { ...(body ? { "Content-Type": "application/json" } : {}), ...(token ? { Authorization: `Bearer ${token}` } : {}) },
     body: body ? JSON.stringify(body) : undefined,
   });
-  if (!res.ok) throw new ApiError(res.status, await safeText(res));
+  if (!res.ok) return fail(res);
   return (await res.json()) as T;
 }
 
@@ -226,7 +238,7 @@ export async function uploadFile(tenantId: string, file: File): Promise<{ tree: 
     headers: token ? { Authorization: `Bearer ${token}` } : {},
     body: file,
   });
-  if (!res.ok) throw new ApiError(res.status, await safeText(res));
+  if (!res.ok) return fail(res);
   return (await res.json()) as { tree: TreeNode[] };
 }
 export async function fetchUploads(tenantId: string): Promise<{ tree: TreeNode[] }> {

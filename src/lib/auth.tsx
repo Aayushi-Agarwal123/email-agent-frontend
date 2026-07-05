@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 import { IS_LIVE, clearSession, getSession, postAuthSession, saveSession, type Session } from "./api";
 
 // In fixture/preview mode there's no backend to log in against, so we run as a
@@ -26,6 +26,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = useCallback(() => {
     clearSession();
     setSession(null);
+  }, []);
+
+  // An expired/invalid session (401 from any API call) bounces back to login.
+  useEffect(() => {
+    const handler = () => setSession(null);
+    window.addEventListener("dashboard:unauthorized", handler);
+    return () => window.removeEventListener("dashboard:unauthorized", handler);
   }, []);
 
   return <AuthContext.Provider value={{ session, live: IS_LIVE, login, logout }}>{children}</AuthContext.Provider>;
