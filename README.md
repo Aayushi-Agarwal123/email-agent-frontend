@@ -7,9 +7,11 @@ their quote requests.
 > **Live app:** _<add your Vercel URL here>_
 
 It is a **static single‑page app**. It has no backend of its own — it talks to
-the **BFF** (the metrics/onboarding API) over HTTP. The whole UI can also run
-with **zero backend** in a bundled demo mode, which makes local development and
-previews trivial.
+the **BFF** over HTTP. **BFF = Backend for Frontend**: a backend dedicated to
+this UI that exposes exactly the endpoints it needs (auth, metrics, onboarding,
+uploads) and hides everything else — Postgres, Gmail, the agent daemon — behind
+it. The whole UI can also run with **zero backend** in a bundled demo mode,
+which makes local development and previews trivial.
 
 ---
 
