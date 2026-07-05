@@ -252,13 +252,16 @@ export function OnboardingWizard({ tenantId, onDone }: { tenantId: string; onDon
               <CardDescription>The mailbox your agent reads RFQs from and sends quotes with.</CardDescription>
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-2">
             {gmailDone ? (
               <p className="text-sm text-emerald-600 dark:text-emerald-400">Gmail connected.</p>
             ) : (
-              <Button variant="outline" onClick={connectGmailFlow} disabled={busy}>
-                <MailIcon className="mr-2 h-4 w-4" /> Connect Gmail
-              </Button>
+              <>
+                <Button variant="outline" onClick={connectGmailFlow} disabled={busy || !profileDone}>
+                  <MailIcon className="mr-2 h-4 w-4" /> Connect Gmail
+                </Button>
+                {!profileDone && <p className="text-xs text-muted-foreground">Save your business profile first.</p>}
+              </>
             )}
           </CardContent>
         </Card>
@@ -272,12 +275,17 @@ export function OnboardingWizard({ tenantId, onDone }: { tenantId: string; onDon
               <CardDescription>A single file or a .zip / .tar.gz of your price data (max 100 MB).</CardDescription>
             </div>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <label className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-input bg-background px-3 py-2 text-sm hover:bg-accent">
+          <CardContent className="space-y-3">
+            <label
+              className={`inline-flex items-center gap-2 rounded-md border border-input bg-background px-3 py-2 text-sm ${
+                busy || !gmailDone ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:bg-accent"
+              }`}
+            >
               <UploadIcon className="h-4 w-4" />
               {busy ? "Uploading…" : "Choose file"}
-              <input type="file" className="hidden" onChange={onUpload} disabled={busy} accept=".zip,.tar,.tar.gz,.tgz,.gz,.csv,.xlsx,.json,.txt,.pdf" />
+              <input type="file" className="hidden" onChange={onUpload} disabled={busy || !gmailDone} accept=".zip,.tar,.tar.gz,.tgz,.gz,.csv,.xlsx,.json,.txt,.pdf" />
             </label>
+            {!gmailDone && <p className="text-xs text-muted-foreground">Connect Gmail first.</p>}
             <div className="rounded-md border border-border/50 bg-muted/20 p-3">
               <FileTree nodes={tree} />
             </div>
