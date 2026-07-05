@@ -68,8 +68,8 @@ export function TopBar({ tenantName, health, reviewQueueCount, view, onViewChang
       <div className="container mx-auto flex h-16 items-center justify-between gap-4 px-4">
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded bg-primary font-bold text-primary-foreground">
-              K
+            <div className="flex h-8 w-8 items-center justify-center rounded bg-primary font-bold uppercase text-primary-foreground">
+              {tenantName.trim().charAt(0) || "•"}
             </div>
             <span className="hidden text-lg font-bold tracking-tight sm:inline">{tenantName}</span>
           </div>
