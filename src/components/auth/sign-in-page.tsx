@@ -62,9 +62,9 @@ export function SignInPage() {
             </Button>
           </form>
           <p className="mt-4 text-center text-sm text-muted-foreground">
-            New here?{" "}
+            Don't have an account?{" "}
             <Link to="/register" className="font-medium text-foreground hover:underline">
-              Create an account
+              Register
             </Link>
           </p>
         </CardContent>

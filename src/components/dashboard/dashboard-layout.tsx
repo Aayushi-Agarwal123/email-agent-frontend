@@ -85,9 +85,12 @@ export function DashboardLayout() {
   }, [tenantId, onboarded]);
 
   const handleSignOut = () => {
+    // Navigate away from the protected route tree first, then clear the
+    // session — clearing it first can let RequireMockAuth's guard redirect
+    // to /signin before this navigation lands, trapping the user there.
+    navigate("/", { replace: true });
     mockSignOut();
     logout();
-    navigate("/", { replace: true });
   };
 
   if (onboarded === null) {

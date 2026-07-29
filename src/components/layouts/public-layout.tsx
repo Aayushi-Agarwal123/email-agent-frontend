@@ -1,5 +1,5 @@
 import { Link, Outlet } from "react-router-dom";
-import { FileTextIcon } from "lucide-react";
+import { ArrowLeftIcon, FileTextIcon } from "lucide-react";
 import { ModeToggle } from "@/components/mode-toggle";
 
 /** Shared chrome for /signin and /register — the marketing nav from the
@@ -15,7 +15,16 @@ export function PublicLayout() {
             </div>
             <span className="text-lg font-bold tracking-tight">Quotation Agent</span>
           </Link>
-          <ModeToggle />
+          <div className="flex items-center gap-4">
+            <Link
+              to="/"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground"
+            >
+              <ArrowLeftIcon className="h-4 w-4" />
+              Back to Home
+            </Link>
+            <ModeToggle />
+          </div>
         </div>
       </header>
       <main className="flex flex-1 flex-col">

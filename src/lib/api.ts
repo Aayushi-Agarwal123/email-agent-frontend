@@ -184,17 +184,44 @@ async function authed<T>(path: string, method: string, body?: unknown): Promise<
 }
 
 // Demo (fixture-mode) onboarding state, so the whole wizard is previewable offline.
-const demoOnb: OnboardingState = {
-  onboarded: false,
-  gmailConnected: false,
-  hasData: false,
-  displayName: null,
-  currency: null,
-  priceBasis: null,
-  validityDays: null,
-  reviewerEmail: null,
-};
-let demoTree: TreeNode[] = [];
+// Persisted to localStorage — without this, a page refresh re-executes this
+// module from scratch and silently resets onboarding to "not started."
+const DEMO_ONBOARDING_KEY = "mock-onboarding-state";
+
+function loadDemoOnboardingState(): { onb: OnboardingState; tree: TreeNode[] } {
+  const fallback: { onb: OnboardingState; tree: TreeNode[] } = {
+    onb: {
+      onboarded: false,
+      gmailConnected: false,
+      hasData: false,
+      displayName: null,
+      currency: null,
+      priceBasis: null,
+      validityDays: null,
+      reviewerEmail: null,
+    },
+    tree: [],
+  };
+  try {
+    const raw = localStorage.getItem(DEMO_ONBOARDING_KEY);
+    if (!raw) return fallback;
+    const parsed = JSON.parse(raw) as Partial<{ onb: Partial<OnboardingState>; tree: TreeNode[] }>;
+    return { onb: { ...fallback.onb, ...parsed.onb }, tree: parsed.tree ?? [] };
+  } catch {
+    return fallback;
+  }
+}
+
+const { onb: demoOnb, tree: demoTreeInit } = loadDemoOnboardingState();
+let demoTree: TreeNode[] = demoTreeInit;
+
+function persistDemoOnboardingState(): void {
+  try {
+    localStorage.setItem(DEMO_ONBOARDING_KEY, JSON.stringify({ onb: demoOnb, tree: demoTree }));
+  } catch {
+    // best-effort — demo persistence only, never blocks the flow
+  }
+}
 
 export async function fetchOnboarding(tenantId: string): Promise<OnboardingState> {
   if (!IS_LIVE) {
@@ -207,6 +234,7 @@ export async function saveOnboardingProfile(tenantId: string, p: ProfileInput): 
   if (!IS_LIVE) {
     await delay(150);
     Object.assign(demoOnb, { displayName: p.displayName, currency: p.currency.toUpperCase(), priceBasis: p.priceBasis, validityDays: p.validityDays, reviewerEmail: p.reviewerEmail });
+    persistDemoOnboardingState();
     return { ...demoOnb };
   }
   return authed(`/v1/tenants/${tenantId}/onboarding/profile`, "PUT", p);
@@ -215,6 +243,7 @@ export async function completeOnboarding(tenantId: string): Promise<OnboardingSt
   if (!IS_LIVE) {
     await delay(150);
     demoOnb.onboarded = true;
+    persistDemoOnboardingState();
     return { ...demoOnb };
   }
   return authed(`/v1/tenants/${tenantId}/onboarding/complete`, "POST");
@@ -225,6 +254,7 @@ export async function connectGmail(tenantId: string, code: string, redirectUri: 
 /** Demo-mode Gmail "connect" (no real OAuth in fixture preview). */
 export function connectGmailDemo(): void {
   demoOnb.gmailConnected = true;
+  persistDemoOnboardingState();
 }
 export const IS_DEMO = !IS_LIVE;
 
@@ -233,6 +263,7 @@ export async function uploadFile(tenantId: string, file: File): Promise<{ tree: 
     await delay(300);
     if (!demoTree.some((n) => n.name === file.name)) demoTree = [...demoTree, { name: file.name, type: "file", size: file.size }];
     demoOnb.hasData = true;
+    persistDemoOnboardingState();
     return { tree: demoTree };
   }
   const token = getSession()?.token;
