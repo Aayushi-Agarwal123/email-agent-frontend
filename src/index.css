@@ -4,60 +4,70 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 220 27% 98%;
+    --foreground: 220 43% 11%;
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 220 43% 11%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --popover-foreground: 220 43% 11%;
+    --primary: 220 43% 11%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 216 24% 96%;
+    --secondary-foreground: 220 43% 11%;
+    --muted: 220 20% 96%;
+    --muted-foreground: 220 14% 40%;
+    --accent: 216 24% 96%;
+    --accent-foreground: 220 43% 11%;
+    --destructive: 4 76% 40%;
+    --destructive-foreground: 0 0% 100%;
     --warning: 38 92% 50%;
     --warning-foreground: 30 80% 12%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-    --radius: 0.5rem;
+    --success: 155 90% 24%;
+    --success-bg: 145 81% 96%;
+    --destructive-bg: 5 85% 97%;
+    --attention: 42 71% 87%;
+    --attention-bg: 45 100% 96%;
+    --border: 217 17% 91%;
+    --input: 217 17% 91%;
+    --ring: 220 43% 11%;
+    --radius: 0.625rem;
   }
 
   .dark {
-    /* Neutral near-black surfaces; teal lives only as the accent (--primary/--ring). */
-    --background: 0 0% 4%;
-    --foreground: 0 0% 95%;
-    --card: 0 0% 7%;
-    --card-foreground: 0 0% 95%;
-    --popover: 0 0% 7%;
-    --popover-foreground: 0 0% 95%;
-    --primary: 160 84% 39%;
-    --primary-foreground: 160 30% 6%;
-    --secondary: 0 0% 14%;
-    --secondary-foreground: 0 0% 95%;
-    --muted: 0 0% 13%;
-    --muted-foreground: 0 0% 60%;
-    --accent: 0 0% 16%;
-    --accent-foreground: 0 0% 95%;
-    --destructive: 0 72% 45%;
-    --destructive-foreground: 0 0% 96%;
+    --background: 222 20% 9%;
+    --foreground: 216 20% 95%;
+    --card: 220 18% 13%;
+    --card-foreground: 216 20% 95%;
+    --popover: 220 18% 13%;
+    --popover-foreground: 216 20% 95%;
+    --primary: 210 20% 98%;
+    --primary-foreground: 220 20% 10%;
+    --secondary: 217 16% 16%;
+    --secondary-foreground: 216 20% 95%;
+    --muted: 217 14% 16%;
+    --muted-foreground: 218 12% 68%;
+    --accent: 217 16% 16%;
+    --accent-foreground: 216 20% 95%;
+    --destructive: 4 65% 58%;
+    --destructive-foreground: 0 0% 100%;
     /* Amber promoted to a deliberate "needs attention" token; foreground is dark for solid fills. */
     --warning: 38 92% 50%;
     --warning-foreground: 38 92% 8%;
-    --border: 0 0% 15%;
-    --input: 0 0% 15%;
-    --ring: 160 84% 39%;
+    --success: 150 40% 48%;
+    --success-bg: 152 35% 15%;
+    --destructive-bg: 6 50% 18%;
+    --attention: 39 65% 52%;
+    --attention-bg: 30 40% 16%;
+    --border: 217 16% 22%;
+    --input: 217 16% 22%;
+    --ring: 210 20% 98%;
   }
 }
 
 @layer base {
   * {
     @apply border-border;
+    transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease;
   }
   body {
     @apply bg-background font-sans text-foreground;
