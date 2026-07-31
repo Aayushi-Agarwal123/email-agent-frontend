@@ -64,10 +64,10 @@ function SortableHead({ label, col, sort, onSort, className }: {
       : ChevronDownIcon
     : ChevronsUpDownIcon;
   return (
-    <TableHead className={className}>
-      <button type="button" onClick={() => onSort(col)} className="inline-flex items-center gap-1 hover:text-foreground">
+    <TableHead className={cn("h-9 text-[10px] font-semibold uppercase tracking-[0.08em] text-[#71716A]", className)}>
+      <button type="button" onClick={() => onSort(col)} className="inline-flex items-center gap-1 hover:text-[#1A1A1A]">
         {label}
-        <Icon className={cn("h-3.5 w-3.5", active ? "text-foreground" : "opacity-40")} />
+        <Icon className={cn("h-3.5 w-3.5", active ? "text-[#1A1A1A]" : "text-[#9A998F]")} />
       </button>
     </TableHead>
   );
@@ -88,34 +88,48 @@ export function DashboardLists({ conversations, quotations, reviewQueue, overvie
   const quotationRows = quotations.rows.slice(0, PAGE);
   const escalationReasons = overview.escalationReasons.slice(0, PAGE);
 
+  const tabTriggerCls =
+    "rounded-none text-[#71716A] hover:text-[#1A1A1A] data-[state=active]:border-[#1A1A1A] data-[state=active]:text-[#1A1A1A]";
+
   return (
-    <Card className="col-span-1 border-border">
+    <Card
+      className="col-span-1 rounded-[2px] border-[#DAD5C8] bg-[#FCFBF7] shadow-none"
+      style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
+    >
       <Tabs defaultValue="review" className="w-full">
-        <CardHeader className="flex flex-row items-center justify-between border-b px-6 py-4">
+        <CardHeader className="flex flex-row items-center justify-between border-b border-[#DAD5C8] px-6 py-4">
           <div>
-            <CardTitle className="text-lg">Recent Activity</CardTitle>
-            <CardDescription>Review tasks, conversations, and quotes (up to {PAGE}).</CardDescription>
+            <CardTitle
+              className="text-[16px] font-normal text-[#1A1A1A]"
+              style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}
+            >
+              Recent Activity
+            </CardTitle>
+            <CardDescription className="text-[11.5px] text-[#71716A]">Review tasks, conversations, and quotes (up to {PAGE}).</CardDescription>
           </div>
-          <TabsList>
-            <TabsTrigger value="review" className="relative">
+          <TabsList className="text-[#71716A]">
+            <TabsTrigger value="review" className={cn(tabTriggerCls, "relative")}>
               Review Queue
               {reviewQueue.rows.length > 0 && (
-                <Badge variant="destructive" className="ml-2 flex h-5 w-5 items-center justify-center rounded-full p-0">
+                <Badge
+                  variant="outline"
+                  className="ml-2 flex h-5 w-5 items-center justify-center rounded-full border-[1.5px] border-[#9A3B34] bg-transparent p-0 text-[10px] text-[#9A3B34]"
+                >
                   {reviewQueue.rows.length}
                 </Badge>
               )}
             </TabsTrigger>
-            <TabsTrigger value="conversations">Conversations</TabsTrigger>
-            <TabsTrigger value="quotations">Quotations</TabsTrigger>
-            <TabsTrigger value="escalations">Escalations</TabsTrigger>
+            <TabsTrigger value="conversations" className={tabTriggerCls}>Conversations</TabsTrigger>
+            <TabsTrigger value="quotations" className={tabTriggerCls}>Quotations</TabsTrigger>
+            <TabsTrigger value="escalations" className={tabTriggerCls}>Escalations</TabsTrigger>
           </TabsList>
         </CardHeader>
         <CardContent className="p-0">
           <TabsContent value="review" className="m-0 border-none p-0 outline-none">
             <ScrollArea className="h-[400px]">
-              <Table>
-                <TableHeader className="sticky top-0 z-10 bg-background">
-                  <TableRow>
+              <Table className="text-[13px] text-[#1A1A1A]">
+                <TableHeader className="sticky top-0 z-10 bg-[#FCFBF7]">
+                  <TableRow className="border-[#DAD5C8] hover:bg-transparent">
                     <SortableHead label="Customer" col="customer" sort={sort} onSort={onSort} />
                     <SortableHead label="Quote #" col="quote" sort={sort} onSort={onSort} />
                     <SortableHead label="Total Value" col="total" sort={sort} onSort={onSort} />
@@ -126,24 +140,26 @@ export function DashboardLists({ conversations, quotations, reviewQueue, overvie
                 </TableHeader>
                 <TableBody>
                   {reviewRows.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={6} className="py-10 text-center text-muted-foreground">
+                    <TableRow className="border-[#DAD5C8] hover:bg-transparent">
+                      <TableCell colSpan={6} className="py-10 text-center text-[#71716A]">
                         All caught up! No items to review.
                       </TableCell>
                     </TableRow>
                   ) : (
                     reviewRows.map((row) => (
-                      <TableRow key={row.conversationId}>
+                      <TableRow key={row.conversationId} className="border-[#DAD5C8] hover:bg-[#F9F7F1]">
                         <TableCell className="font-medium">{row.customerEmail}</TableCell>
-                        <TableCell>{row.quotationNumber}</TableCell>
-                        <TableCell>{formatMoney(row.total)}</TableCell>
-                        <TableCell>{row.lineCount}</TableCell>
-                        <TableCell>{formatDate(row.waitingSinceAt)}</TableCell>
+                        <TableCell className="tabular-nums">{row.quotationNumber}</TableCell>
+                        <TableCell className="tabular-nums">{formatMoney(row.total)}</TableCell>
+                        <TableCell className="tabular-nums">{row.lineCount}</TableCell>
+                        <TableCell className="tabular-nums">{formatDate(row.waitingSinceAt)}</TableCell>
                         <TableCell>
                           {row.hasMissingPrices ? (
-                            <Badge variant="destructive">Needs Price</Badge>
+                            <Badge variant="outline" className="rounded-[2px] border-[1.5px] border-[#9A3B34] bg-transparent px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-[#9A3B34]">
+                              Needs Price
+                            </Badge>
                           ) : (
-                            <Badge variant="outline" className="border-emerald-500 text-emerald-500">
+                            <Badge variant="outline" className="rounded-[2px] border-[1.5px] border-[#1D7A46] bg-transparent px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-[#1D7A46]">
                               Ready
                             </Badge>
                           )}
@@ -158,40 +174,40 @@ export function DashboardLists({ conversations, quotations, reviewQueue, overvie
 
           <TabsContent value="conversations" className="m-0 border-none p-0 outline-none">
             <ScrollArea className="h-[400px]">
-              <Table>
-                <TableHeader className="sticky top-0 z-10 bg-background">
-                  <TableRow>
-                    <TableHead>Customer</TableHead>
-                    <TableHead>Subject</TableHead>
-                    <TableHead>Stage</TableHead>
-                    <TableHead>Last Activity</TableHead>
+              <Table className="text-[13px] text-[#1A1A1A]">
+                <TableHeader className="sticky top-0 z-10 bg-[#FCFBF7]">
+                  <TableRow className="border-[#DAD5C8] hover:bg-transparent">
+                    <TableHead className="h-9 text-[10px] font-semibold uppercase tracking-[0.08em] text-[#71716A]">Customer</TableHead>
+                    <TableHead className="h-9 text-[10px] font-semibold uppercase tracking-[0.08em] text-[#71716A]">Subject</TableHead>
+                    <TableHead className="h-9 text-[10px] font-semibold uppercase tracking-[0.08em] text-[#71716A]">Stage</TableHead>
+                    <TableHead className="h-9 text-[10px] font-semibold uppercase tracking-[0.08em] text-[#71716A]">Last Activity</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {conversationRows.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={4} className="py-10 text-center text-muted-foreground">
+                    <TableRow className="border-[#DAD5C8] hover:bg-transparent">
+                      <TableCell colSpan={4} className="py-10 text-center text-[#71716A]">
                         No recent conversations.
                       </TableCell>
                     </TableRow>
                   ) : (
                     conversationRows.map((row) => (
-                      <TableRow key={row.conversationId}>
+                      <TableRow key={row.conversationId} className="border-[#DAD5C8] hover:bg-[#F9F7F1]">
                         <TableCell className="font-medium">{row.customerEmail}</TableCell>
                         <TableCell>
-                          <div className="max-w-[300px] truncate text-sm" title={row.subject || ""}>
-                            {row.subject || <span className="italic text-muted-foreground">No Subject</span>}
+                          <div className="max-w-[300px] truncate text-[13px]" title={row.subject || ""}>
+                            {row.subject || <span className="italic text-[#71716A]">No Subject</span>}
                           </div>
-                          <div className="mt-1 max-w-[300px] truncate text-xs text-muted-foreground" title={row.snippet || ""}>
+                          <div className="mt-1 max-w-[300px] truncate text-[11px] text-[#71716A]" title={row.snippet || ""}>
                             {row.snippet}
                           </div>
                         </TableCell>
                         <TableCell>
-                          <Badge variant="secondary" className="font-mono text-[10px] uppercase tracking-wider">
+                          <Badge variant="outline" className="rounded-[2px] border-[1.5px] border-[#DAD5C8] bg-transparent px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-[#71716A]">
                             {row.stage.replace("_", " ")}
                           </Badge>
                         </TableCell>
-                        <TableCell className="text-sm">{formatDate(row.lastActivityAt)}</TableCell>
+                        <TableCell className="text-[13px] tabular-nums">{formatDate(row.lastActivityAt)}</TableCell>
                       </TableRow>
                     ))
                   )}
@@ -202,37 +218,48 @@ export function DashboardLists({ conversations, quotations, reviewQueue, overvie
 
           <TabsContent value="quotations" className="m-0 border-none p-0 outline-none">
             <ScrollArea className="h-[400px]">
-              <Table>
-                <TableHeader className="sticky top-0 z-10 bg-background">
-                  <TableRow>
-                    <TableHead>Quote #</TableHead>
-                    <TableHead>Customer</TableHead>
-                    <TableHead>Total Value</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Updated</TableHead>
+              <Table className="text-[13px] text-[#1A1A1A]">
+                <TableHeader className="sticky top-0 z-10 bg-[#FCFBF7]">
+                  <TableRow className="border-[#DAD5C8] hover:bg-transparent">
+                    <TableHead className="h-9 text-[10px] font-semibold uppercase tracking-[0.08em] text-[#71716A]">Quote #</TableHead>
+                    <TableHead className="h-9 text-[10px] font-semibold uppercase tracking-[0.08em] text-[#71716A]">Customer</TableHead>
+                    <TableHead className="h-9 text-[10px] font-semibold uppercase tracking-[0.08em] text-[#71716A]">Total Value</TableHead>
+                    <TableHead className="h-9 text-[10px] font-semibold uppercase tracking-[0.08em] text-[#71716A]">Status</TableHead>
+                    <TableHead className="h-9 text-[10px] font-semibold uppercase tracking-[0.08em] text-[#71716A]">Updated</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {quotationRows.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={5} className="py-10 text-center text-muted-foreground">
+                    <TableRow className="border-[#DAD5C8] hover:bg-transparent">
+                      <TableCell colSpan={5} className="py-10 text-center text-[#71716A]">
                         No recent quotations.
                       </TableCell>
                     </TableRow>
                   ) : (
-                    quotationRows.map((row) => (
-                      <TableRow key={row.quotationNumber}>
-                        <TableCell className="font-medium">{row.quotationNumber}</TableCell>
-                        <TableCell>{row.customerEmail}</TableCell>
-                        <TableCell>{formatMoney(row.total)}</TableCell>
-                        <TableCell>
-                          <Badge variant={row.status === "released" ? "default" : row.status === "awaiting_review" ? "secondary" : "outline"} className="capitalize">
-                            {row.status.replace("_", " ")}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="text-sm">{formatDate(row.updatedAt)}</TableCell>
-                      </TableRow>
-                    ))
+                    quotationRows.map((row) => {
+                      const statusCls =
+                        row.status === "released"
+                          ? "border-[#1D7A46] text-[#1D7A46]"
+                          : row.status === "awaiting_review"
+                            ? "border-[#9A3B34] text-[#9A3B34]"
+                            : "border-[#DAD5C8] text-[#71716A]";
+                      return (
+                        <TableRow key={row.quotationNumber} className="border-[#DAD5C8] hover:bg-[#F9F7F1]">
+                          <TableCell className="font-medium tabular-nums">{row.quotationNumber}</TableCell>
+                          <TableCell>{row.customerEmail}</TableCell>
+                          <TableCell className="tabular-nums">{formatMoney(row.total)}</TableCell>
+                          <TableCell>
+                            <Badge
+                              variant="outline"
+                              className={cn("rounded-[2px] border-[1.5px] bg-transparent px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide", statusCls)}
+                            >
+                              {row.status.replace("_", " ")}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-[13px] tabular-nums">{formatDate(row.updatedAt)}</TableCell>
+                        </TableRow>
+                      );
+                    })
                   )}
                 </TableBody>
               </Table>
@@ -241,18 +268,18 @@ export function DashboardLists({ conversations, quotations, reviewQueue, overvie
 
           <TabsContent value="escalations" className="m-0 border-none p-0 outline-none">
             <div className="p-6">
-              <h3 className="mb-4 text-sm font-medium">Escalation Reasons Breakdown</h3>
+              <h3 className="mb-4 text-[13px] font-medium text-[#1A1A1A]">Escalation Reasons Breakdown</h3>
               {escalationReasons.length === 0 ? (
-                <div className="py-10 text-center text-muted-foreground">No escalations in this period. Great job!</div>
+                <div className="py-10 text-center text-[#71716A]">No escalations in this period. Great job!</div>
               ) : (
                 <div className="space-y-4">
                   {escalationReasons.map((r) => (
                     <div key={r.reason} className="flex items-center">
-                      <div className="w-[150px] font-mono text-sm capitalize">{r.reason.replace(/_/g, " ")}</div>
-                      <div className="ml-4 h-4 flex-1 overflow-hidden rounded-full bg-muted">
-                        <div className="h-full bg-destructive" style={{ width: `${(r.count / Math.max(1, overview.funnel.escalated)) * 100}%` }} />
+                      <div className="w-[150px] font-mono text-[12px] text-[#1A1A1A]">{r.reason.replace(/_/g, " ")}</div>
+                      <div className="ml-4 h-1.5 flex-1 overflow-hidden rounded-[2px] bg-[#DAD5C8]">
+                        <div className="h-full bg-[#9A3B34]" style={{ width: `${(r.count / Math.max(1, overview.funnel.escalated)) * 100}%` }} />
                       </div>
-                      <div className="ml-4 w-12 text-right text-sm text-muted-foreground">{r.count}</div>
+                      <div className="ml-4 w-12 text-right text-[13px] tabular-nums text-[#71716A]">{r.count}</div>
                     </div>
                   ))}
                 </div>

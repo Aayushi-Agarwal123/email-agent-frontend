@@ -12,8 +12,13 @@ export function OverviewRoute() {
   return (
     <>
       <div className="flex flex-col gap-1">
-        <h2 className="text-2xl font-bold tracking-tight">Overview</h2>
-        <p className="text-muted-foreground">Here's what your email quoting agent has been up to.</p>
+        <h2
+          className="text-[26px] tracking-tight text-[#1A1A1A]"
+          style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}
+        >
+          Overview
+        </h2>
+        <p className="text-[#71716A]">Here's what your email quoting agent has been up to.</p>
       </div>
       <GmailBanner health={overview.health} />
       <KpiCards data={overview} />
@@ -32,8 +37,13 @@ export function ReviewQueueRoute() {
   return (
     <>
       <div className="flex flex-col gap-1">
-        <h2 className="text-2xl font-bold tracking-tight">Review Queue</h2>
-        <p className="text-muted-foreground">Quotes the agent has prepared — nothing sends until you approve it.</p>
+        <h2
+          className="text-[26px] tracking-tight text-[#1A1A1A]"
+          style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}
+        >
+          Review Queue
+        </h2>
+        <p className="text-[#71716A]">Quotes the agent has prepared — nothing sends until you approve it.</p>
       </div>
       <DashboardLists conversations={conversations} quotations={quotations} reviewQueue={reviewQueue} overview={overview} />
     </>
@@ -45,8 +55,13 @@ export function CatalogRoute() {
   return (
     <>
       <div className="flex flex-col gap-1">
-        <h2 className="text-2xl font-bold tracking-tight">Catalog</h2>
-        <p className="text-muted-foreground">The products and prices your agent quotes from.</p>
+        <h2
+          className="text-[26px] tracking-tight text-[#1A1A1A]"
+          style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}
+        >
+          Catalog
+        </h2>
+        <p className="text-[#71716A]">The products and prices your agent quotes from.</p>
       </div>
       <CatalogPage tenantId={tenantId} />
     </>
@@ -58,8 +73,13 @@ export function SettingsRoute() {
   return (
     <>
       <div className="flex flex-col gap-1">
-        <h2 className="text-2xl font-bold tracking-tight">Settings</h2>
-        <p className="text-muted-foreground">Manage how your quoting agent behaves.</p>
+        <h2
+          className="text-[26px] tracking-tight text-[#1A1A1A]"
+          style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}
+        >
+          Settings
+        </h2>
+        <p className="text-[#71716A]">Manage how your quoting agent behaves.</p>
       </div>
       <SettingsPage tenantId={tenantId} />
     </>

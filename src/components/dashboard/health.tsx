@@ -10,15 +10,15 @@ import { format, parseISO } from "date-fns";
 export function SystemStrip({ health }: { health: MetricsHealthV1 }) {
   const deliverability = `${((1 - health.bounceRate) * 100).toFixed(1)}%`;
   return (
-    <div className="flex flex-wrap items-center gap-x-6 gap-y-2 rounded-lg border border-border/50 bg-muted/30 px-4 py-2.5 text-xs text-muted-foreground">
+    <div className="flex flex-wrap items-center gap-x-6 gap-y-2 rounded-[2px] border border-[#DAD5C8] bg-transparent px-4 py-2.5 text-[11px] text-[#71716A]">
       {health.bounceRate > 0 && (
-        <span className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
+        <span className="flex items-center gap-2 text-[#9A3B34]">
           <AlertCircleIcon className="h-3.5 w-3.5" />
           Deliverability <span className="font-medium">{deliverability}</span> — some emails bounced
         </span>
       )}
       {health.deadLetteredCount > 0 && (
-        <span className="flex items-center gap-2 text-destructive">
+        <span className="flex items-center gap-2 text-[#9A3B34]">
           <AlertCircleIcon className="h-3.5 w-3.5" />
           <span className="font-medium">{health.deadLetteredCount} message(s) failed processing</span>
         </span>
@@ -33,7 +33,7 @@ export function SystemStrip({ health }: { health: MetricsHealthV1 }) {
 export function GmailBanner({ health }: { health: MetricsHealthV1 }) {
   if (health.gmailConnected) return null;
   return (
-    <div className="flex items-center gap-3 rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+    <div className="flex items-center gap-3 rounded-[2px] border-[1.5px] border-[#9A3B34] bg-transparent px-4 py-3 text-[13px] text-[#9A3B34]">
       <MailWarningIcon className="h-5 w-5 shrink-0" />
       <div>
         <span className="font-semibold">Gmail disconnected.</span> The agent can't receive or send mail

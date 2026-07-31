@@ -95,8 +95,8 @@ export function DashboardLayout() {
 
   if (onboarded === null) {
     return (
-      <div className="flex h-screen items-center justify-center bg-background">
-        <Loader2Icon className="h-8 w-8 animate-spin text-primary" />
+      <div className="flex h-screen items-center justify-center bg-[#FCFBF7]">
+        <Loader2Icon className="h-8 w-8 animate-spin text-[#1A1A1A]" />
       </div>
     );
   }
@@ -105,16 +105,22 @@ export function DashboardLayout() {
   }
   if (loading && !overview) {
     return (
-      <div className="flex h-screen items-center justify-center bg-background">
-        <Loader2Icon className="h-8 w-8 animate-spin text-primary" />
-        <span className="ml-2 text-lg font-medium">Loading dashboard…</span>
+      <div
+        className="flex h-screen items-center justify-center bg-[#FCFBF7] text-[#1A1A1A]"
+        style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
+      >
+        <Loader2Icon className="h-8 w-8 animate-spin" />
+        <span className="ml-2 text-[17px] font-medium">Loading dashboard…</span>
       </div>
     );
   }
   if (error && !overview) {
     return (
-      <div className="flex h-screen items-center justify-center bg-background">
-        <div className="text-lg font-medium text-destructive">
+      <div
+        className="flex h-screen items-center justify-center bg-[#FCFBF7]"
+        style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
+      >
+        <div className="text-[17px] font-medium text-[#9A3B34]">
           Couldn't load the dashboard. Check the API connection and retry.
         </div>
       </div>
@@ -123,7 +129,10 @@ export function DashboardLayout() {
   if (!overview || !conversations || !quotations || !reviewQueue) return null;
 
   return (
-    <div className="min-h-screen bg-background font-sans text-foreground">
+    <div
+      className="min-h-screen bg-[#FCFBF7] text-[#1A1A1A]"
+      style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
+    >
       <TopBar
         tenantName={displayName ?? tenantId}
         health={overview.health}

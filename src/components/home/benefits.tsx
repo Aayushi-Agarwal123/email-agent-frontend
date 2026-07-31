@@ -1,49 +1,42 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { ClockIcon, LayersIcon, TrendingUpIcon, BadgeCheckIcon } from "lucide-react";
-
 const BENEFITS = [
   {
-    icon: ClockIcon,
     title: "Never miss an RFQ",
-    description: "Every email is read the moment it lands, even during your busiest hours — nothing sits unopened in a shared inbox.",
+    description: "Every email is read the moment it lands, even during your busiest hours.",
   },
   {
-    icon: LayersIcon,
     title: "Built for large catalogs",
-    description: "Price thousands of SKUs — pipes, valves, fittings, and fasteners — without a manual lookup for every line.",
+    description: "Price thousands of SKUs without a manual lookup for every line.",
   },
   {
-    icon: TrendingUpIcon,
     title: "Faster than manual quoting",
-    description: "Cut average response time from 1–2 days to under an hour — a real edge when buyers are comparing suppliers.",
+    description: "Cut average response time from 1–2 days to under an hour.",
   },
   {
-    icon: BadgeCheckIcon,
     title: "Consistent pricing, every time",
-    description: "The same catalog and the same logic price every quote — no variation because a different person typed it.",
+    description: "The same catalog and logic price every quote — no variation by who typed it.",
   },
 ];
 
 export function Benefits() {
   return (
-    <section className="border-t border-border py-16">
+    <section className="border-t border-[#DAD5C8] bg-[#FCFBF7] py-16 md:py-24" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
       <div className="container mx-auto px-4">
-        <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">Built for industrial suppliers</h2>
-          <p className="mt-2 text-muted-foreground">Steel, pipes, valves, and fittings — quoted the way your business actually runs.</p>
+        <div className="max-w-xl">
+          <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-[#9A998F]">Built for industrial suppliers</p>
+          <h2
+            className="mt-3 text-[28px] leading-[1.15] text-[#1A1A1A] md:text-[34px]"
+            style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 400 }}
+          >
+            Quoted the way your business actually runs.
+          </h2>
         </div>
 
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {BENEFITS.map(({ icon: Icon, title, description }) => (
-            <Card key={title} className="border-border">
-              <CardContent className="p-6">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                  <Icon className="h-5 w-5" />
-                </div>
-                <h3 className="mt-4 text-sm font-semibold text-foreground">{title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{description}</p>
-              </CardContent>
-            </Card>
+        <div className="mt-14 grid gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+          {BENEFITS.map((b, idx) => (
+            <div key={b.title} className={idx > 0 ? "lg:border-l lg:border-[#DAD5C8] lg:pl-10" : ""}>
+              <h3 className="text-[15px] font-medium text-[#1A1A1A]">{b.title}</h3>
+              <p className="mt-2 text-[13.5px] leading-[1.6] text-[#71716A]">{b.description}</p>
+            </div>
           ))}
         </div>
       </div>

@@ -1,32 +1,43 @@
 import { FileTextIcon } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { ModeToggle } from "@/components/mode-toggle";
 
 export function HomeNav() {
   const navigate = useNavigate();
 
   return (
-    <header className="border-b border-border bg-background">
+    <header
+      className="border-b border-[#DAD5C8] bg-[#FCFBF7]"
+      style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
+    >
       <div className="container mx-auto flex h-16 items-center justify-between gap-4 px-4">
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded bg-primary text-primary-foreground">
+          <div className="flex h-8 w-8 items-center justify-center rounded-[2px] border-[1.5px] border-[#1A1A1A] text-[#1A1A1A]">
             <FileTextIcon className="h-4 w-4" />
           </div>
-          <span className="text-lg font-bold tracking-tight">Quotation Agent</span>
+          <span
+            className="text-[17px] tracking-tight text-[#1A1A1A]"
+            style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}
+          >
+            Quotation Agent
+          </span>
         </div>
 
-        <nav className="hidden items-center gap-6 text-sm font-medium text-muted-foreground sm:flex">
-          <a href="#how-it-works" className="hover:text-foreground">How it works</a>
-          <a href="#trust" className="hover:text-foreground">Security</a>
+        <nav className="hidden items-center gap-5 text-[13px] font-medium sm:flex">
+          <a href="#how-it-works" className="text-[#71716A] hover:text-[#1A1A1A]">How it works</a>
+          <a href="#trust" className="text-[#71716A] hover:text-[#1A1A1A]">Security</a>
         </nav>
 
-        <div className="flex items-center gap-3">
-          <ModeToggle />
-          <Link to="/signin" className="text-sm font-medium text-muted-foreground hover:text-foreground">
+        <div className="flex items-center gap-4">
+          <Link to="/signin" className="text-[13px] font-medium text-[#71716A] hover:text-[#1A1A1A]">
             Sign in
           </Link>
-          <Button size="sm" onClick={() => navigate("/register")}>Get started</Button>
+          <button
+            type="button"
+            onClick={() => navigate("/register")}
+            className="inline-flex items-center rounded-[2px] border-[1.5px] border-[#1A1A1A] bg-[#1A1A1A] px-3.5 py-1.5 text-[12px] font-semibold text-[#FCFBF7] transition-transform hover:-translate-y-px"
+          >
+            Get started
+          </button>
         </div>
       </div>
     </header>

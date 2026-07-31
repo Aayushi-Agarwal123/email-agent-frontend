@@ -1,10 +1,8 @@
 import { HomeNav } from "./nav";
 import { Hero } from "./hero";
 import { HowItWorks } from "./how-it-works";
-import { ProductPreview } from "./product-preview";
 import { Trust } from "./trust";
 import { Benefits } from "./benefits";
-import { Comparison } from "./comparison";
 import { FinalCta } from "./cta";
 
 export function HomePage() {
@@ -13,10 +11,8 @@ export function HomePage() {
       <HomeNav />
       <Hero />
       <HowItWorks />
-      <ProductPreview />
       <Trust />
       <Benefits />
-      <Comparison />
       <FinalCta />
     </div>
   );

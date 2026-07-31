@@ -26,8 +26,8 @@ export function OnboardingRoute() {
 
   if (onboarded === null) {
     return (
-      <div className="flex h-screen items-center justify-center bg-background">
-        <Loader2Icon className="h-8 w-8 animate-spin text-primary" />
+      <div className="flex h-screen items-center justify-center bg-[#FCFBF7]">
+        <Loader2Icon className="h-8 w-8 animate-spin text-[#1A1A1A]" />
       </div>
     );
   }

@@ -11,10 +11,14 @@ const HINTS = {
 
 function InfoHint({ text }: { text: string }) {
   return (
-    <Tooltip label={text} side="bottom">
+    <Tooltip
+      label={text}
+      side="bottom"
+      className="rounded-[2px] border-[#DAD5C8] bg-[#FCFBF7] text-[#1A1A1A] shadow-none"
+    >
       <span
         tabIndex={0}
-        className="cursor-help rounded text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+        className="cursor-help text-[#9A998F] outline-none hover:text-[#1A1A1A] focus-visible:ring-1 focus-visible:ring-[#1A1A1A]"
       >
         <InfoIcon className="h-3.5 w-3.5" />
       </span>
@@ -38,61 +42,67 @@ export function KpiCards({ data }: { data: MetricsOverviewV1 }) {
     const isGood = invertGood ? isNegative : isPositive;
     const isBad = invertGood ? isPositive : isNegative;
     
-    const colorClass = isGood ? 'text-emerald-500' : isBad ? 'text-rose-500' : 'text-muted-foreground';
+    const colorClass = isGood ? 'text-[#1D7A46]' : isBad ? 'text-[#9A3B34]' : 'text-[#71716A]';
     const Icon = isPositive ? ArrowUpIcon : isNegative ? ArrowDownIcon : MinusIcon;
     const symbol = isPoints ? 'pts' : '%';
-    
+
     return (
-      <span className={`text-sm flex items-center font-medium ${colorClass}`}>
+      <span className={`text-[13px] flex items-center font-medium ${colorClass}`}>
         <Icon className="h-4 w-4 mr-1" />
         {Math.abs(delta)}{symbol} vs last period
       </span>
     );
   };
 
+  const cardCls = "rounded-none border-0 border-t-[1.5px] border-t-[#1A1A1A] bg-transparent shadow-none";
+  const headerCls = "flex flex-row items-center justify-between space-y-0 p-0 px-0.5 pb-2 pt-3.5";
+  const titleCls = "text-[10.5px] font-semibold uppercase tracking-[0.08em] text-[#71716A]";
+  const contentCls = "p-0 px-0.5 pb-3.5";
+  const valueStyle = { fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 } as const;
+
   return (
-    <div className="grid gap-4 md:grid-cols-3">
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Quotes Released</CardTitle>
+    <div className="grid gap-4 md:grid-cols-3" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
+      <Card className={cardCls}>
+        <CardHeader className={headerCls}>
+          <CardTitle className={titleCls}>Quotes Released</CardTitle>
           <InfoHint text={HINTS.quotesReleased} />
         </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">{kpis.quotesReleased.value}</div>
+        <CardContent className={contentCls}>
+          <div className="text-[26px] tracking-[-0.02em] tabular-nums text-[#1A1A1A]" style={valueStyle}>{kpis.quotesReleased.value}</div>
           <div className="mt-1">{renderDelta(kpis.quotesReleased.deltaPct)}</div>
-          <div className="text-xs text-muted-foreground mt-3 flex items-center justify-between">
+          <div className="text-[11px] text-[#71716A] mt-3 flex items-center justify-between">
             <span>Value pending:</span>
-            <span className="font-medium text-foreground">{formatMoney(data.secondary.valueAwaitingApproval)}</span>
-          </div>
-        </CardContent>
-      </Card>
-      
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Value Released</CardTitle>
-          <InfoHint text={HINTS.valueReleased} />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">{formatMoney(kpis.valueReleased.value)}</div>
-          <div className="mt-1">{renderDelta(kpis.valueReleased.deltaPct)}</div>
-          <div className="text-xs text-muted-foreground mt-3 flex items-center justify-between">
-            <span>Approval time:</span>
-            <span className="font-medium text-foreground">{data.secondary.medianApprovalTimeMinutes ? `${data.secondary.medianApprovalTimeMinutes}m` : 'N/A'}</span>
+            <span className="font-medium tabular-nums text-[#1A1A1A]">{formatMoney(data.secondary.valueAwaitingApproval)}</span>
           </div>
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Time to Quote</CardTitle>
+      <Card className={cardCls}>
+        <CardHeader className={headerCls}>
+          <CardTitle className={titleCls}>Value Released</CardTitle>
+          <InfoHint text={HINTS.valueReleased} />
+        </CardHeader>
+        <CardContent className={contentCls}>
+          <div className="text-[26px] tracking-[-0.02em] tabular-nums text-[#1D7A46]" style={valueStyle}>{formatMoney(kpis.valueReleased.value)}</div>
+          <div className="mt-1">{renderDelta(kpis.valueReleased.deltaPct)}</div>
+          <div className="text-[11px] text-[#71716A] mt-3 flex items-center justify-between">
+            <span>Approval time:</span>
+            <span className="font-medium tabular-nums text-[#1A1A1A]">{data.secondary.medianApprovalTimeMinutes ? `${data.secondary.medianApprovalTimeMinutes}m` : 'N/A'}</span>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className={cardCls}>
+        <CardHeader className={headerCls}>
+          <CardTitle className={titleCls}>Time to Quote</CardTitle>
           <InfoHint text={HINTS.timeToQuote} />
         </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">{kpis.medianTimeToQuoteMinutes.value ? `${kpis.medianTimeToQuoteMinutes.value}m` : 'N/A'}</div>
+        <CardContent className={contentCls}>
+          <div className="text-[26px] tracking-[-0.02em] tabular-nums text-[#1A1A1A]" style={valueStyle}>{kpis.medianTimeToQuoteMinutes.value ? `${kpis.medianTimeToQuoteMinutes.value}m` : 'N/A'}</div>
           <div className="mt-1">{renderDelta(kpis.medianTimeToQuoteMinutes.deltaPct, false, true)}</div>
-          <div className="text-xs text-muted-foreground mt-3 flex items-center justify-between">
+          <div className="text-[11px] text-[#71716A] mt-3 flex items-center justify-between">
             <span>Escalation rate:</span>
-            <span className="font-medium text-foreground">{(data.secondary.escalationRate * 100).toFixed(1)}%</span>
+            <span className="font-medium tabular-nums text-[#1A1A1A]">{(data.secondary.escalationRate * 100).toFixed(1)}%</span>
           </div>
         </CardContent>
       </Card>

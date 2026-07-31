@@ -4,9 +4,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { FileTree } from "@/components/file-tree";
-import { CheckCircle2Icon, CircleIcon, Loader2Icon, LogOutIcon, MailIcon, UploadIcon } from "lucide-react";
+import { CheckCircle2Icon, CheckIcon, CircleIcon, Loader2Icon, LogOutIcon, MailIcon, UploadIcon } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/auth";
+import { useMockSession } from "@/lib/mock-session";
 import { ensureGoogleScript, google } from "@/lib/google";
+import { cn } from "@/lib/utils";
 import {
   fetchOnboarding,
   fetchUploads,
@@ -44,19 +47,68 @@ const CURRENCIES: { code: string; name: string; flag: string }[] = [
 ];
 
 function Req() {
-  return <span className="text-destructive"> *</span>;
+  return <span className="text-[#9A3B34]"> *</span>;
 }
 
 function StepBadge({ done }: { done: boolean }) {
   return done ? (
-    <CheckCircle2Icon className="h-5 w-5 text-emerald-500" />
+    <CheckCircle2Icon className="h-5 w-5 text-[#1D7A46]" />
   ) : (
-    <CircleIcon className="h-5 w-5 text-muted-foreground/50" />
+    <CircleIcon className="h-5 w-5 text-[#9A998F]" />
+  );
+}
+
+type RailStatus = "done" | "current" | "upcoming";
+
+// Purely a visual progress overview — clicking scrolls to the step's card
+// rather than switching which content is shown. All three step cards stay
+// visible and gated exactly as they already are; this doesn't change that.
+function ProgressRailStep({ index, anchor, title, description, status, isLast }: {
+  index: number;
+  anchor: string;
+  title: string;
+  description: string;
+  status: RailStatus;
+  isLast: boolean;
+}) {
+  const filled = status !== "upcoming";
+  return (
+    <a
+      href={`#${anchor}`}
+      aria-current={status === "current" ? "step" : undefined}
+      aria-label={`Step ${index}: ${title}${status === "done" ? " (completed)" : status === "current" ? " (current)" : ""}`}
+      className="group flex gap-3"
+    >
+      <span className="flex flex-col items-center">
+        <span
+          className={cn(
+            "flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-[1.5px] font-mono text-[12.5px] font-semibold transition-colors",
+            filled
+              ? "border-[#1A1A1A] bg-[#1A1A1A] text-[#FCFBF7]"
+              : "border-[#DAD5C8] bg-transparent text-[#9A998F] group-hover:border-[#1A1A1A] group-hover:text-[#1A1A1A]",
+          )}
+        >
+          {status === "done" ? <CheckIcon className="h-4 w-4" /> : index}
+        </span>
+        {!isLast && <span className={cn("mt-1 w-[1.5px] flex-1", filled ? "bg-[#1A1A1A]" : "bg-[#DAD5C8]")} />}
+      </span>
+      <span className={cn("pb-6", isLast && "pb-0")}>
+        <span
+          className={cn("block text-[14px]", status === "upcoming" ? "text-[#71716A]" : "text-[#1A1A1A]")}
+          style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}
+        >
+          {title}
+        </span>
+        <span className="mt-1 block text-[12px] leading-[1.5] text-[#71716A]">{description}</span>
+      </span>
+    </a>
   );
 }
 
 export function OnboardingWizard({ tenantId, onDone }: { tenantId: string; onDone: () => void }) {
   const { session, live, logout } = useAuth();
+  const { session: mockSession, signOut: mockSignOut } = useMockSession();
+  const navigate = useNavigate();
   const [onb, setOnb] = useState<OnboardingState | null>(null);
   const [tree, setTree] = useState<TreeNode[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -90,8 +142,8 @@ export function OnboardingWizard({ tenantId, onDone }: { tenantId: string; onDon
 
   if (!onb) {
     return (
-      <div className="flex h-screen items-center justify-center bg-background">
-        <Loader2Icon className="h-8 w-8 animate-spin text-primary" />
+      <div className="flex h-screen items-center justify-center bg-[#FCFBF7]">
+        <Loader2Icon className="h-8 w-8 animate-spin text-[#1A1A1A]" />
       </div>
     );
   }
@@ -102,6 +154,13 @@ export function OnboardingWizard({ tenantId, onDone }: { tenantId: string; onDon
   const allDone = profileDone && gmailDone && dataDone;
   // Client-side gate for the profile save: the three mandatory fields.
   const profileValid = displayName.trim().length > 0 && currency.length === 3 && EMAIL_RE.test(reviewerEmail.trim());
+
+  const statusOf = (done: boolean, isNext: boolean): RailStatus => (done ? "done" : isNext ? "current" : "upcoming");
+  const railSteps: { anchor: string; title: string; description: string; status: RailStatus }[] = [
+    { anchor: "onb-step-1", title: "Business profile", description: "How your quotes are labelled and priced.", status: statusOf(profileDone, !profileDone) },
+    { anchor: "onb-step-2", title: "Connect Gmail", description: "The mailbox the agent reads RFQs from.", status: statusOf(gmailDone, profileDone && !gmailDone) },
+    { anchor: "onb-step-3", title: "Upload catalog", description: "Your price data — one file or a .zip.", status: statusOf(dataDone, profileDone && gmailDone && !dataDone) },
+  ];
 
   const saveProfile = async () => {
     setBusy(true);
@@ -185,51 +244,97 @@ export function OnboardingWizard({ tenantId, onDone }: { tenantId: string; onDon
     }
   };
 
+  // Clears both the mock session (what actually gates /signin, /register,
+  // /onboarding, /dashboard here) and the real auth session, then navigates
+  // away first — same order dashboard-layout.tsx uses, since clearing the
+  // session before navigating can let the route guard redirect to /signin
+  // before this navigation lands, trapping the user here.
+  const handleSignOut = () => {
+    navigate("/", { replace: true });
+    mockSignOut();
+    logout();
+  };
+
   return (
-    <div className="min-h-screen bg-background font-sans text-foreground">
-      <div className="mx-auto max-w-2xl space-y-6 px-4 py-10">
+    <div
+      className="min-h-screen bg-[#FCFBF7] text-[#1A1A1A]"
+      style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
+    >
+      <div className="mx-auto max-w-5xl space-y-6 px-4 py-10">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Welcome — let's set up your quoting agent</h1>
-            <p className="text-muted-foreground">Three quick steps and your agent starts handling quotes.</p>
-            {IS_DEMO && <p className="mt-1 text-xs text-muted-foreground">(Preview mode — steps are simulated.)</p>}
-            {live && session?.email && <p className="mt-1 text-xs text-muted-foreground">Signed in as {session.email}</p>}
-          </div>
-          {live && (
-            <button
-              type="button"
-              onClick={logout}
-              title={session?.email ? `Sign out (${session.email})` : "Sign out"}
-              className="inline-flex shrink-0 items-center gap-1.5 rounded-md px-2 py-1.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
+            <h1
+              className="text-[26px] tracking-tight text-[#1A1A1A]"
+              style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}
             >
-              <LogOutIcon className="h-4 w-4" /> Sign out
-            </button>
-          )}
+              Welcome — let's set up your quoting agent
+            </h1>
+            <p className="text-[#71716A]">Three quick steps and your agent starts handling quotes.</p>
+            {IS_DEMO && <p className="mt-1 text-[11px] text-[#71716A]">(Preview mode — steps are simulated.)</p>}
+            {(live ? session?.email : mockSession?.email) && (
+              <p className="mt-1 text-[11px] text-[#71716A]">Signed in as {live ? session?.email : mockSession?.email}</p>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={handleSignOut}
+            title={
+              (live ? session?.email : mockSession?.email)
+                ? `Sign out (${live ? session?.email : mockSession?.email})`
+                : "Sign out"
+            }
+            className="inline-flex shrink-0 items-center gap-1.5 px-2 py-1.5 text-[13px] text-[#71716A] hover:text-[#1A1A1A]"
+          >
+            <LogOutIcon className="h-4 w-4" /> Sign out
+          </button>
         </div>
 
-        {error && <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</div>}
+        {error && (
+          <div className="rounded-[2px] border-[1.5px] border-[#9A3B34] bg-transparent px-3 py-2 text-[13px] text-[#9A3B34]">
+            {error}
+          </div>
+        )}
 
+        <div className="grid gap-10 md:grid-cols-[220px_1fr]">
+          <nav aria-label="Onboarding progress" className="hidden md:block">
+            {railSteps.map((s, i) => (
+              <ProgressRailStep key={s.anchor} index={i + 1} isLast={i === railSteps.length - 1} {...s} />
+            ))}
+          </nav>
+
+          <div className="max-w-2xl space-y-6">
         {/* Step 1 — business profile */}
-        <Card>
+        <Card id="onb-step-1" className="scroll-mt-6 rounded-[2px] border-[#DAD5C8] bg-[#FCFBF7] shadow-none">
           <CardHeader className="flex flex-row items-center gap-3 space-y-0">
             <StepBadge done={profileDone} />
             <div>
-              <CardTitle className="text-base">Business profile</CardTitle>
-              <CardDescription>How your quotes are labelled and priced.</CardDescription>
+              <CardTitle
+                className="text-[15px] font-normal text-[#1A1A1A]"
+                style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}
+              >
+                Business profile
+              </CardTitle>
+              <CardDescription className="text-[13px] text-[#71716A]">How your quotes are labelled and priced.</CardDescription>
             </div>
           </CardHeader>
           <CardContent className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2 sm:col-span-2">
-              <Label htmlFor="name">Business name<Req /></Label>
-              <Input id="name" value={displayName} onChange={(e) => setDisplayName(e.target.value)} placeholder="Golden Steel Supplier Co" />
+              <Label htmlFor="name" className="text-[13px] font-medium text-[#1A1A1A]">Business name<Req /></Label>
+              <Input
+                id="name"
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+                placeholder="Golden Steel Supplier Co"
+                className="rounded-[2px] border-[#DAD5C8] bg-white text-[#1A1A1A] shadow-none placeholder:text-[#9A998F] focus-visible:ring-[#1A1A1A]"
+              />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="currency">Currency<Req /></Label>
+              <Label htmlFor="currency" className="text-[13px] font-medium text-[#1A1A1A]">Currency<Req /></Label>
               <select
                 id="currency"
                 value={currency}
                 onChange={(e) => setCurrency(e.target.value)}
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring"
+                className="flex h-9 w-full rounded-[2px] border border-[#DAD5C8] bg-white px-3 py-1 text-[13px] text-[#1A1A1A] focus:outline-none focus:ring-1 focus:ring-[#1A1A1A]"
               >
                 <option value="" disabled>
                   Select currency…
@@ -242,88 +347,137 @@ export function OnboardingWizard({ tenantId, onDone }: { tenantId: string; onDon
               </select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="rev">Reviewer email<Req /></Label>
-              <Input id="rev" type="email" value={reviewerEmail} onChange={(e) => setReviewerEmail(e.target.value)} placeholder="boss@company.com" />
+              <Label htmlFor="rev" className="text-[13px] font-medium text-[#1A1A1A]">Reviewer email<Req /></Label>
+              <Input
+                id="rev"
+                type="email"
+                value={reviewerEmail}
+                onChange={(e) => setReviewerEmail(e.target.value)}
+                placeholder="boss@company.com"
+                className="rounded-[2px] border-[#DAD5C8] bg-white text-[#1A1A1A] shadow-none placeholder:text-[#9A998F] focus-visible:ring-[#1A1A1A]"
+              />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="basis">
-                Price basis <span className="text-xs font-normal text-muted-foreground">(optional)</span>
+              <Label htmlFor="basis" className="text-[13px] font-medium text-[#1A1A1A]">
+                Price basis <span className="text-[11px] font-normal text-[#71716A]">(optional)</span>
               </Label>
-              <Input id="basis" value={priceBasis} onChange={(e) => setPriceBasis(e.target.value)} placeholder="e.g. Ex-works" />
+              <Input
+                id="basis"
+                value={priceBasis}
+                onChange={(e) => setPriceBasis(e.target.value)}
+                placeholder="e.g. Ex-works"
+                className="rounded-[2px] border-[#DAD5C8] bg-white text-[#1A1A1A] shadow-none placeholder:text-[#9A998F] focus-visible:ring-[#1A1A1A]"
+              />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="validity">
-                Quote validity in days <span className="text-xs font-normal text-muted-foreground">(optional)</span>
+              <Label htmlFor="validity" className="text-[13px] font-medium text-[#1A1A1A]">
+                Quote validity in days <span className="text-[11px] font-normal text-[#71716A]">(optional)</span>
               </Label>
-              <Input id="validity" type="number" value={validityDays} onChange={(e) => setValidityDays(e.target.value)} placeholder="30" />
+              <Input
+                id="validity"
+                type="number"
+                value={validityDays}
+                onChange={(e) => setValidityDays(e.target.value)}
+                placeholder="30"
+                className="rounded-[2px] border-[#DAD5C8] bg-white text-[#1A1A1A] shadow-none placeholder:text-[#9A998F] focus-visible:ring-[#1A1A1A]"
+              />
             </div>
             <div className="flex flex-wrap items-center gap-3 sm:col-span-2">
-              <Button onClick={saveProfile} disabled={busy || !profileValid}>
+              <Button
+                onClick={saveProfile}
+                disabled={busy || !profileValid}
+                className="rounded-[2px] border-[1.5px] border-[#1A1A1A] bg-[#1A1A1A] text-[#FCFBF7] shadow-none transition-transform hover:-translate-y-px hover:bg-[#1A1A1A]"
+              >
                 Save profile
               </Button>
               {!profileValid && (
-                <span className="text-xs text-muted-foreground">Business name, currency and reviewer email are required.</span>
+                <span className="text-[11px] text-[#71716A]">Business name, currency and reviewer email are required.</span>
               )}
-              {profileDone && <span className="text-xs text-emerald-600 dark:text-emerald-400">Saved.</span>}
+              {profileDone && <span className="text-[11px] text-[#1D7A46]">Saved.</span>}
             </div>
           </CardContent>
         </Card>
 
         {/* Step 2 — Gmail */}
-        <Card>
+        <Card id="onb-step-2" className="scroll-mt-6 rounded-[2px] border-[#DAD5C8] bg-[#FCFBF7] shadow-none">
           <CardHeader className="flex flex-row items-center gap-3 space-y-0">
             <StepBadge done={gmailDone} />
             <div>
-              <CardTitle className="text-base">Connect Gmail</CardTitle>
-              <CardDescription>The mailbox your agent reads RFQs from and sends quotes with.</CardDescription>
+              <CardTitle
+                className="text-[15px] font-normal text-[#1A1A1A]"
+                style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}
+              >
+                Connect Gmail
+              </CardTitle>
+              <CardDescription className="text-[13px] text-[#71716A]">
+                The mailbox your agent reads RFQs from and sends quotes with.
+              </CardDescription>
             </div>
           </CardHeader>
           <CardContent className="space-y-2">
             {gmailDone ? (
-              <p className="text-sm text-emerald-600 dark:text-emerald-400">Gmail connected.</p>
+              <p className="text-[13px] text-[#1D7A46]">Gmail connected.</p>
             ) : (
               <>
-                <Button variant="outline" onClick={connectGmailFlow} disabled={busy || !profileDone}>
+                <Button
+                  variant="outline"
+                  onClick={connectGmailFlow}
+                  disabled={busy || !profileDone}
+                  className="rounded-[2px] border-[1.5px] border-[#1A1A1A] bg-transparent text-[#1A1A1A] shadow-none hover:-translate-y-px hover:bg-transparent"
+                >
                   <MailIcon className="mr-2 h-4 w-4" /> Connect Gmail
                 </Button>
-                {!profileDone && <p className="text-xs text-muted-foreground">Save your business profile first.</p>}
+                {!profileDone && <p className="text-[11px] text-[#71716A]">Save your business profile first.</p>}
               </>
             )}
           </CardContent>
         </Card>
 
         {/* Step 3 — data */}
-        <Card>
+        <Card id="onb-step-3" className="scroll-mt-6 rounded-[2px] border-[#DAD5C8] bg-[#FCFBF7] shadow-none">
           <CardHeader className="flex flex-row items-center gap-3 space-y-0">
             <StepBadge done={dataDone} />
             <div>
-              <CardTitle className="text-base">Upload your catalog data</CardTitle>
-              <CardDescription>A single file or a .zip / .tar.gz of your price data (max 100 MB).</CardDescription>
+              <CardTitle
+                className="text-[15px] font-normal text-[#1A1A1A]"
+                style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}
+              >
+                Upload your catalog data
+              </CardTitle>
+              <CardDescription className="text-[13px] text-[#71716A]">
+                A single file or a .zip / .tar.gz of your price data (max 100 MB).
+              </CardDescription>
             </div>
           </CardHeader>
           <CardContent className="space-y-3">
             <label
-              className={`inline-flex items-center gap-2 rounded-md border border-input bg-background px-3 py-2 text-sm ${
-                busy || !gmailDone ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:bg-accent"
+              className={`inline-flex items-center gap-2 rounded-[2px] border border-[#DAD5C8] bg-white px-3 py-2 text-[13px] text-[#1A1A1A] ${
+                busy || !gmailDone ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:border-[#1A1A1A]"
               }`}
             >
               <UploadIcon className="h-4 w-4" />
               {busy ? "Uploading…" : "Choose file"}
               <input type="file" className="hidden" onChange={onUpload} disabled={busy || !gmailDone} accept=".zip,.tar,.tar.gz,.tgz,.gz,.csv,.xlsx,.json,.txt,.pdf" />
             </label>
-            {!gmailDone && <p className="text-xs text-muted-foreground">Connect Gmail first.</p>}
-            <div className="rounded-md border border-border/50 bg-muted/20 p-3">
+            {!gmailDone && <p className="text-[11px] text-[#71716A]">Connect Gmail first.</p>}
+            <div className="rounded-[2px] border border-[#DAD5C8] bg-white p-3">
               <FileTree nodes={tree} />
             </div>
           </CardContent>
         </Card>
 
         <div className="flex items-center justify-end gap-3">
-          {!allDone && <span className="text-sm text-muted-foreground">Complete all three steps to finish.</span>}
-          <Button onClick={finish} disabled={!allDone || busy}>
+          {!allDone && <span className="text-[13px] text-[#71716A]">Complete all three steps to finish.</span>}
+          <Button
+            onClick={finish}
+            disabled={!allDone || busy}
+            className="rounded-[2px] border-[1.5px] border-[#1A1A1A] bg-[#1A1A1A] text-[#FCFBF7] shadow-none transition-transform hover:-translate-y-px hover:bg-[#1A1A1A]"
+          >
             {busy && <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />}
             Finish setup
           </Button>
+        </div>
+          </div>
         </div>
       </div>
     </div>

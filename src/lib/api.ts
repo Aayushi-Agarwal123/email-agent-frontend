@@ -256,6 +256,26 @@ export function connectGmailDemo(): void {
   demoOnb.gmailConnected = true;
   persistDemoOnboardingState();
 }
+
+// There's only ever one demo tenant in fixture mode, so its onboarding progress
+// persists in localStorage across "sign ups." Without this, registering a new
+// demo account reuses whatever onboarding state a previous demo session left
+// behind (including a stale displayName) and skips straight to the dashboard.
+// Call this when a new account registers so it starts its own onboarding.
+export function resetDemoOnboardingState(): void {
+  Object.assign(demoOnb, {
+    onboarded: false,
+    gmailConnected: false,
+    hasData: false,
+    displayName: null,
+    currency: null,
+    priceBasis: null,
+    validityDays: null,
+    reviewerEmail: null,
+  });
+  demoTree = [];
+  persistDemoOnboardingState();
+}
 export const IS_DEMO = !IS_LIVE;
 
 export async function uploadFile(tenantId: string, file: File): Promise<{ tree: TreeNode[] }> {

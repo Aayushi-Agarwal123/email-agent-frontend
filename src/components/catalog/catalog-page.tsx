@@ -11,18 +11,20 @@ import { cn } from "@/lib/utils";
 
 const LIMIT = 6;
 
-const CATEGORY_META: Record<string, { label: string; chip: string }> = {
-  ball_valve: { label: "Ball valve", chip: "bg-sky-500/15 text-sky-600 dark:text-sky-400" },
-  butterfly_valve: { label: "Butterfly valve", chip: "bg-teal-500/15 text-teal-600 dark:text-teal-400" },
-  gate_valve: { label: "Gate valve", chip: "bg-violet-500/15 text-violet-600 dark:text-violet-400" },
-  globe_valve: { label: "Globe valve", chip: "bg-amber-500/15 text-amber-600 dark:text-amber-400" },
-  check_valve: { label: "Check valve", chip: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400" },
+// One restrained neutral chip style for every category — color here would just be
+// decoration, not meaning (status color is reserved for review/health state).
+const CATEGORY_META: Record<string, { label: string }> = {
+  ball_valve: { label: "Ball valve" },
+  butterfly_valve: { label: "Butterfly valve" },
+  gate_valve: { label: "Gate valve" },
+  globe_valve: { label: "Globe valve" },
+  check_valve: { label: "Check valve" },
 };
 
 function CategoryChip({ category }: { category: string }) {
   const meta = CATEGORY_META[category];
   return (
-    <span className={cn("inline-flex items-center whitespace-nowrap rounded-full px-2 py-0.5 text-xs font-medium", meta?.chip ?? "bg-muted text-muted-foreground")}>
+    <span className="inline-flex items-center whitespace-nowrap rounded-[2px] border border-[#DAD5C8] px-2 py-0.5 text-[11px] font-medium text-[#71716A]">
       {meta?.label ?? category}
     </span>
   );
@@ -75,9 +77,13 @@ export function CatalogPage({ tenantId }: { tenantId: string }) {
     setQ(draftQ.trim());
   };
 
+  const pillBase = "rounded-[2px] border px-3 py-1 text-[11px] font-medium transition-colors";
+  const pillActive = "border-[#1A1A1A] bg-[#1A1A1A] text-[#FCFBF7]";
+  const pillInactive = "border-[#DAD5C8] text-[#71716A] hover:border-[#1A1A1A] hover:text-[#1A1A1A]";
+
   return (
-    <div className="space-y-4">
-      <div className="flex items-start gap-2 rounded-lg border border-border/50 bg-muted/30 px-4 py-2.5 text-xs text-muted-foreground">
+    <div className="space-y-4" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
+      <div className="flex items-start gap-2 rounded-[2px] border border-[#DAD5C8] bg-transparent px-4 py-2.5 text-[11px] text-[#71716A]">
         <InfoIcon className="mt-0.5 h-3.5 w-3.5 shrink-0" />
         <span>
           Your price catalog is served by the retrieval (RAG) service. Showing sample data until that
@@ -85,18 +91,37 @@ export function CatalogPage({ tenantId }: { tenantId: string }) {
         </span>
       </div>
 
-      <Card>
+      <Card className="rounded-[2px] border-[#DAD5C8] bg-[#FCFBF7] shadow-none">
         <CardHeader className="flex flex-col gap-4">
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-            <CardTitle>Catalog</CardTitle>
+            <CardTitle
+              className="text-[16px] font-normal text-[#1A1A1A]"
+              style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}
+            >
+              Catalog
+            </CardTitle>
             <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" disabled={offset === 0} onClick={() => setOffset((o) => Math.max(0, o - LIMIT))} aria-label="Previous page">
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={offset === 0}
+                onClick={() => setOffset((o) => Math.max(0, o - LIMIT))}
+                aria-label="Previous page"
+                className="rounded-[2px] border-[1.5px] border-[#1A1A1A] bg-transparent text-[#1A1A1A] shadow-none hover:bg-transparent hover:-translate-y-px"
+              >
                 <ChevronLeftIcon className="h-4 w-4" />
               </Button>
-              <span className="text-sm text-muted-foreground">
+              <span className="text-[13px] text-[#71716A]">
                 {filtered.length > 0 ? `${offset + 1}-${Math.min(offset + LIMIT, filtered.length)} of ${filtered.length}` : "0"}
               </span>
-              <Button variant="outline" size="sm" disabled={!hasNext} onClick={() => setOffset((o) => o + LIMIT)} aria-label="Next page">
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={!hasNext}
+                onClick={() => setOffset((o) => o + LIMIT)}
+                aria-label="Next page"
+                className="rounded-[2px] border-[1.5px] border-[#1A1A1A] bg-transparent text-[#1A1A1A] shadow-none hover:bg-transparent hover:-translate-y-px"
+              >
                 <ChevronRightIcon className="h-4 w-4" />
               </Button>
             </div>
@@ -106,7 +131,7 @@ export function CatalogPage({ tenantId }: { tenantId: string }) {
             <button
               type="button"
               onClick={() => setFilterCategory("")}
-              className={cn("rounded-full border px-3 py-1 text-xs font-medium transition-colors", category === "" ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:bg-muted")}
+              className={cn(pillBase, category === "" ? pillActive : pillInactive)}
             >
               All
             </button>
@@ -115,7 +140,7 @@ export function CatalogPage({ tenantId }: { tenantId: string }) {
                 key={c}
                 type="button"
                 onClick={() => setFilterCategory(c)}
-                className={cn("rounded-full border px-3 py-1 text-xs font-medium transition-colors", category === c ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:bg-muted")}
+                className={cn(pillBase, category === c ? pillActive : pillInactive)}
               >
                 {CATEGORY_META[c]?.label ?? c}
               </button>
@@ -128,9 +153,13 @@ export function CatalogPage({ tenantId }: { tenantId: string }) {
                 onKeyDown={(e) => {
                   if (e.key === "Enter") applySearch();
                 }}
-                className="w-56"
+                className="w-56 rounded-[2px] border-[#DAD5C8] bg-white text-[#1A1A1A] shadow-none placeholder:text-[#9A998F] focus-visible:ring-[#1A1A1A]"
               />
-              <Button variant="outline" onClick={applySearch}>
+              <Button
+                variant="outline"
+                onClick={applySearch}
+                className="rounded-[2px] border-[1.5px] border-[#1A1A1A] bg-transparent text-[#1A1A1A] shadow-none hover:bg-transparent hover:-translate-y-px"
+              >
                 <SearchIcon className="mr-2 h-4 w-4" />
                 Search
               </Button>
@@ -138,22 +167,22 @@ export function CatalogPage({ tenantId }: { tenantId: string }) {
           </div>
         </CardHeader>
         <CardContent>
-          <Table>
+          <Table className="text-[13px] text-[#1A1A1A]">
             <TableHeader>
-              <TableRow>
-                <TableHead>Category</TableHead>
-                <TableHead>Item</TableHead>
-                <TableHead>Class</TableHead>
-                <TableHead>End</TableHead>
-                <TableHead>MOC</TableHead>
-                <TableHead>Size</TableHead>
-                <TableHead className="text-right">Unit Price</TableHead>
+              <TableRow className="border-[#DAD5C8] hover:bg-transparent">
+                <TableHead className="h-9 text-[10px] font-semibold uppercase tracking-[0.08em] text-[#71716A]">Category</TableHead>
+                <TableHead className="h-9 text-[10px] font-semibold uppercase tracking-[0.08em] text-[#71716A]">Item</TableHead>
+                <TableHead className="h-9 text-[10px] font-semibold uppercase tracking-[0.08em] text-[#71716A]">Class</TableHead>
+                <TableHead className="h-9 text-[10px] font-semibold uppercase tracking-[0.08em] text-[#71716A]">End</TableHead>
+                <TableHead className="h-9 text-[10px] font-semibold uppercase tracking-[0.08em] text-[#71716A]">MOC</TableHead>
+                <TableHead className="h-9 text-[10px] font-semibold uppercase tracking-[0.08em] text-[#71716A]">Size</TableHead>
+                <TableHead className="h-9 text-right text-[10px] font-semibold uppercase tracking-[0.08em] text-[#71716A]">Unit Price</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {rows === null ? (
                 Array.from({ length: 5 }).map((_, i) => (
-                  <TableRow key={`sk-${i}`}>
+                  <TableRow key={`sk-${i}`} className="border-[#DAD5C8] hover:bg-transparent">
                     {Array.from({ length: 7 }).map((__, j) => (
                       <TableCell key={j}>
                         <Skeleton className="h-4 w-full" />
@@ -162,14 +191,14 @@ export function CatalogPage({ tenantId }: { tenantId: string }) {
                   </TableRow>
                 ))
               ) : pageRows.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={7} className="py-10 text-center text-muted-foreground">
+                <TableRow className="border-[#DAD5C8] hover:bg-transparent">
+                  <TableCell colSpan={7} className="py-10 text-center text-[#71716A]">
                     No catalog items match the filters.
                   </TableCell>
                 </TableRow>
               ) : (
                 pageRows.map((row) => (
-                  <TableRow key={row.id}>
+                  <TableRow key={row.id} className="border-[#DAD5C8] hover:bg-[#F9F7F1]">
                     <TableCell>
                       <CategoryChip category={row.category} />
                     </TableCell>
