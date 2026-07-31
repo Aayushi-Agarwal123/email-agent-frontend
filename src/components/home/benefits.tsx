@@ -1,3 +1,5 @@
+import { useInViewOnce } from "@/hooks/use-in-view-once";
+
 const BENEFITS = [
   {
     title: "Never miss an RFQ",
@@ -18,24 +20,44 @@ const BENEFITS = [
 ];
 
 export function Benefits() {
+  const { ref, inView } = useInViewOnce<HTMLElement>();
+
   return (
-    <section className="border-t border-[#DAD5C8] bg-[#FCFBF7] py-16 md:py-24" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
-      <div className="container mx-auto px-4">
-        <div className="max-w-xl">
-          <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-[#9A998F]">Built for industrial suppliers</p>
+    <section
+      ref={ref}
+      className="border-t border-hairline bg-cream"
+      style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
+    >
+      <div className="mx-auto max-w-[1200px] px-6 py-12 md:px-8 md:py-20">
+        <div
+          className={`mb-14 max-w-[750px] opacity-100 motion-safe:transition-all motion-safe:duration-700 motion-safe:ease-out ${
+            inView ? "" : "motion-safe:-translate-x-10 motion-safe:opacity-0"
+          }`}
+        >
+          <p className="font-mono text-[11px] font-medium uppercase tracking-[2.8px] text-gold">
+            Built for industrial suppliers
+          </p>
           <h2
-            className="mt-3 text-[28px] leading-[1.15] text-[#1A1A1A] md:text-[34px]"
-            style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 400 }}
+            className="mt-3 text-[2rem] font-semibold leading-[1.15] tracking-[-0.5px] text-ink md:text-[3rem]"
+            style={{ fontFamily: "'Fraunces', Georgia, serif" }}
           >
             Quoted the way your business actually runs.
           </h2>
         </div>
 
-        <div className="mt-14 grid gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
           {BENEFITS.map((b, idx) => (
-            <div key={b.title} className={idx > 0 ? "lg:border-l lg:border-[#DAD5C8] lg:pl-10" : ""}>
-              <h3 className="text-[15px] font-medium text-[#1A1A1A]">{b.title}</h3>
-              <p className="mt-2 text-[13.5px] leading-[1.6] text-[#71716A]">{b.description}</p>
+            <div
+              key={b.title}
+              className={`opacity-100 motion-safe:transition-all motion-safe:ease-out motion-safe:[transition-duration:800ms] ${
+                inView ? "" : "motion-safe:translate-y-10 motion-safe:opacity-0"
+              }`}
+              style={{ transitionDelay: `${(idx + 1) * 100}ms` }}
+            >
+              <div className="border-l-4 border-hairline p-[1.8rem] transition-all duration-500 [transition-timing-function:cubic-bezier(0.25,0.46,0.45,0.94)] hover:translate-x-2 hover:border-ink hover:bg-white/60 md:p-8">
+                <h3 className="mb-[0.9rem] text-[1.05rem] font-bold text-ink">{b.title}</h3>
+                <p className="text-[0.93rem] leading-[1.75] text-ink-muted">{b.description}</p>
+              </div>
             </div>
           ))}
         </div>

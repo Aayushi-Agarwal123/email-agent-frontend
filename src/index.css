@@ -31,6 +31,13 @@
     --input: 217 17% 91%;
     --ring: 220 43% 11%;
     --radius: 0.625rem;
+
+    /* Broadsheet Light — cream palette, sourced from existing hardcoded hexes in src/components/home */
+    --cream: 48 45% 98%;      /* #FCFBF7 */
+    --hairline: 43 20% 82%;   /* #DAD5C8 */
+    --ink: 0 0% 10%;          /* #1A1A1A */
+    --ink-muted: 60 3% 43%;   /* #71716A */
+    --gold: 46 27% 53%;       /* #A89968 — new, scoped to benefits.tsx only */
   }
 
   .dark {

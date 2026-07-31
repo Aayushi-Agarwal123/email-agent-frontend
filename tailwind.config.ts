@@ -67,6 +67,13 @@ const config: Config = {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
+        cream: 'hsl(var(--cream))',
+        hairline: 'hsl(var(--hairline))',
+        ink: {
+          DEFAULT: 'hsl(var(--ink))',
+          muted: 'hsl(var(--ink-muted))',
+        },
+        gold: 'hsl(var(--gold))',
       },
     },
   },
