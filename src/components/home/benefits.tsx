@@ -15,7 +15,7 @@ const BENEFITS = [
   },
   {
     title: "Consistent pricing, every time",
-    description: "The same catalog and logic price every quote — no variation by who typed it.",
+    description: "The same catalog and logic price every quote, no variation by who typed it.",
   },
 ];
 

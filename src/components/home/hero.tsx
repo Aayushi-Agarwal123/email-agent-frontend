@@ -22,7 +22,7 @@ export function Hero() {
           style={{ fontFamily: "'Fraunces', Georgia, serif" }}
         >
           Reads RFQ emails in your inbox, prices every line from your own catalog, and
-          drafts the quotation. You review, approve, and it goes out — on your
+          drafts the quotation. You review, approve, and it goes out, on your
           letterhead, from your address.
         </p>
 

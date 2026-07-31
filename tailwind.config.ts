@@ -74,6 +74,7 @@ const config: Config = {
           muted: 'hsl(var(--ink-muted))',
         },
         gold: 'hsl(var(--gold))',
+        green: 'hsl(var(--green))',
       },
     },
   },

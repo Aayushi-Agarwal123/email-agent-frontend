@@ -12,6 +12,8 @@ const STEPS: { actor: string; label: string; you?: boolean }[] = [
 
 const HOLD = [2600, 2400, 3000, 3200, 3000, 2800, 3400];
 
+const TRACK_COLS = "grid-cols-2 md:grid-cols-4 lg:grid-cols-7";
+
 export function HeroWorkflowTimeline() {
   const [i, setI] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -46,69 +48,75 @@ export function HeroWorkflowTimeline() {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <div className="relative pt-1.5">
-        <div className="absolute left-0 right-0 top-3 hidden h-px bg-[#DAD5C8] lg:block" />
-        <div
-          className="absolute left-0 top-3 hidden h-[1.5px] bg-[#1A1A1A] lg:block"
-          style={{ width: `${fillPct}%`, transition: "width 620ms cubic-bezier(.2,.7,.3,1)" }}
-        />
-        <div className="relative grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-4 lg:grid-cols-7 lg:gap-y-0">
-          {STEPS.map((s, n) => {
-            const done = n < i;
-            const now = n === i;
-            return (
-              <button
-                key={n}
-                type="button"
-                onClick={() => setI(n)}
-                onFocus={() => setI(n)}
-                className="block cursor-pointer border-none bg-none p-0 pr-2.5 text-left font-sans"
-              >
-                <span
-                  className="relative mb-4 block h-[11px] w-[11px] rounded-full border-[1.5px] transition-colors duration-300"
-                  style={{
-                    borderColor: done || now ? "#1A1A1A" : "#DAD5C8",
-                    background: s.you ? "#FCFBF7" : done || now ? "#1A1A1A" : "#FCFBF7",
-                    borderWidth: s.you ? "2px" : "1.5px",
-                  }}
-                >
-                  {now && (
-                    <span className="absolute -inset-1.5 animate-[qa-ring_2.4s_cubic-bezier(.2,.7,.3,1)_infinite] rounded-full border border-[#1A1A1A] opacity-0" />
-                  )}
-                </span>
-                <span
-                  className="mb-1.5 block font-mono text-[9.5px] uppercase tracking-[0.14em] transition-colors duration-300"
-                  style={{ color: now ? (s.you ? "#1D7A46" : "#1A1A1A") : "#9A998F" }}
-                >
-                  {s.actor}
-                </span>
-                <span
-                  className="block max-w-[15ch] text-[13.5px] leading-[1.35] transition-colors duration-300"
-                  style={{
-                    color: now ? "#1A1A1A" : done ? "#4A4A45" : "#71716A",
-                    fontWeight: now ? 500 : 400,
-                  }}
-                >
-                  {s.label}
-                </span>
-              </button>
-            );
-          })}
+      {/* Dot track: dots only, one shared grid, so nothing else can affect row height */}
+      <div className={`relative grid gap-x-4 ${TRACK_COLS}`}>
+        <div className="absolute inset-0 hidden items-center lg:flex">
+          <div className="h-px w-full bg-[#DAD5C8]" />
         </div>
+        <div className="absolute inset-0 hidden items-center lg:flex">
+          <div
+            className="h-[1.5px] bg-[#1A1A1A]"
+            style={{ width: `${fillPct}%`, transition: "width 620ms cubic-bezier(.2,.7,.3,1)" }}
+          />
+        </div>
+
+        {STEPS.map((s, n) => {
+          const done = n < i;
+          const now = n === i;
+          return (
+            <button
+              key={n}
+              type="button"
+              onClick={() => setI(n)}
+              className="flex h-6 cursor-pointer items-center border-none bg-none p-0"
+            >
+              <span
+                className="relative z-10 block h-[11px] w-[11px] rounded-full border-2 transition-colors duration-300"
+                style={{
+                  borderColor: done || now ? "#1A1A1A" : "#DAD5C8",
+                  background: s.you ? "#FCFBF7" : done || now ? "#1A1A1A" : "#FCFBF7",
+                }}
+              >
+                {now && (
+                  <span className="absolute -inset-1.5 animate-[qa-ring_2.4s_cubic-bezier(.2,.7,.3,1)_infinite] rounded-full border border-[#1A1A1A] opacity-0" />
+                )}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
-      <div className="mt-6 flex flex-wrap items-center gap-5 text-[12.5px] text-[#71716A]">
-        <span className="flex items-center gap-2">
-          <span className="h-[9px] w-[9px] rounded-full bg-[#1A1A1A]" />
-          The agent does this
-        </span>
-        <span className="flex items-center gap-2">
-          <span className="h-[9px] w-[9px] rounded-full border-2 border-[#1A1A1A] bg-[#FCFBF7]" />
-          You do this — two steps, both yours
-        </span>
-        <span className="font-mono text-[10.5px] uppercase tracking-[0.1em] text-[#9A998F] sm:ml-auto">
-          {reduced ? "Tap a step to view it" : paused ? "Paused" : "Playing · hover to pause"}
-        </span>
+      {/* Label track: separate grid, same column template so it stays aligned under the dots */}
+      <div className={`mt-4 grid gap-x-4 gap-y-8 ${TRACK_COLS} lg:gap-y-0`}>
+        {STEPS.map((s, n) => {
+          const done = n < i;
+          const now = n === i;
+          return (
+            <button
+              key={n}
+              type="button"
+              onClick={() => setI(n)}
+              onFocus={() => setI(n)}
+              className="block cursor-pointer border-none bg-none p-0 pr-2.5 text-left font-sans"
+            >
+              <span
+                className="mb-1.5 block font-mono text-[9.5px] uppercase tracking-[0.14em] transition-colors duration-300"
+                style={{ color: now ? (s.you ? "#1D7A46" : "#1A1A1A") : "#9A998F" }}
+              >
+                {s.actor}
+              </span>
+              <span
+                className="block max-w-[15ch] text-[13.5px] leading-[1.35] transition-colors duration-300"
+                style={{
+                  color: now ? "#1A1A1A" : done ? "#4A4A45" : "#71716A",
+                  fontWeight: now ? 500 : 400,
+                }}
+              >
+                {s.label}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
       <style>{`

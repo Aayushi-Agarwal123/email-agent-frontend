@@ -38,6 +38,7 @@
     --ink: 0 0% 10%;          /* #1A1A1A */
     --ink-muted: 60 3% 43%;   /* #71716A */
     --gold: 46 27% 53%;       /* #A89968 — new, scoped to benefits.tsx only */
+    --green: 146 62% 30%;     /* #1D7A46 — from hero-business-impact.tsx QuoteAgent column, scoped to the before/after panels */
   }
 
   .dark {

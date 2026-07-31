@@ -3,7 +3,7 @@ const STEPS = [
     n: "01",
     title: "An RFQ arrives",
     description:
-      "The agent watches your inbox for quotation requests and reads every line — items, quantities, delivery terms.",
+      "The agent watches your inbox for quotation requests and reads every line: items, quantities, delivery terms.",
   },
   {
     n: "02",
