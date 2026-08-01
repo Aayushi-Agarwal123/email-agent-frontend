@@ -11,7 +11,7 @@ const STEPS = [
     n: "02",
     title: "Intelligent Pricing",
     description:
-      "Understands customer requirements, matches products across complex catalogs, asks clarifying questions, and generates accurate pricing.",
+      "Understands requirements, matches products across complex catalogs, asks clarifying questions, and generates accurate pricing.",
   },
   {
     n: "03",
