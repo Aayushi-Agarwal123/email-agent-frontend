@@ -4,7 +4,7 @@ The web dashboard for the email quotation agent: business owners sign in with
 Google, complete a self‑serve onboarding, and watch how the agent is handling
 their quote requests.
 
-> **Live app:** _<add your Vercel URL here>_
+> **Live app:** _https://email-agent-frontend-delta.vercel.app/_
 
 It is a **static single‑page app**. It has no backend of its own — it talks to
 the **BFF** over HTTP. **BFF = Backend for Frontend**: a backend dedicated to
