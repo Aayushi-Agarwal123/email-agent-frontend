@@ -41,7 +41,7 @@ export function HowItWorks() {
           {STEPS.map((s) => (
             <div
               key={s.n}
-              className="group border-l-[3px] border-[#DAD5C8] pl-5 transition-colors duration-300 ease-out hover:border-[#1A1A1A]"
+              className="group border-2 border-[#1A1A1A] bg-[#FCFBF7] p-6 transition-all duration-[350ms] ease-[cubic-bezier(0.25,0.46,0.45,0.94)] hover:scale-[1.02] hover:bg-[color-mix(in_srgb,#1A1A1A_2%,#FCFBF7)] hover:shadow-[0_10px_30px_rgba(26,26,26,0.07)]"
             >
               <span
                 className="flex h-11 w-11 items-center justify-center rounded-full border-[1.5px] border-[#DAD5C8] font-mono text-[16px] font-semibold text-[#9A998F] transition-all duration-300 ease-out group-hover:border-[#1A1A1A] group-hover:bg-[#1A1A1A] group-hover:text-[#FCFBF7] motion-safe:group-hover:scale-110"
