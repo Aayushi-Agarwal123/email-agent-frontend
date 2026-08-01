@@ -20,14 +20,14 @@ export function Hero() {
             className="max-w-[19ch] text-[2.25rem] leading-[1.03] tracking-[-0.018em] text-[#1A1A1A] md:text-[3.5rem]"
             style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 400 }}
           >
-            Turn Every RFQ Into Revenue Faster.
+            Enterprise Quoting. Automated.
           </h1>
           <p
             className="mt-5 max-w-[44ch] text-[17px] italic leading-[1.5] text-[#43433E] md:text-[20px]"
             style={{ fontFamily: "'Fraunces', Georgia, serif" }}
           >
-            FastQuote prepares complete quotations from incoming RFQs using your own
-            catalog, pricing, and branding. You review once, approve, and send.
+            FastQuote prepares complete quotations from incoming RFQs using your
+            catalog, pricing, and branding.
           </p>
 
           <div className="mt-8 flex flex-wrap items-center gap-6">
