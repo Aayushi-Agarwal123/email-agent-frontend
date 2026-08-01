@@ -5,12 +5,25 @@ const STEPS: { actor: string; label: string; you?: boolean }[] = [
   { actor: "Agent", label: "Matches your catalog" },
   { actor: "Agent", label: "Drafts the quotation" },
   { actor: "You", label: "Review and Approve", you: true },
-  { actor: "Agent", label: "Sent to the customer" },
+  { actor: "Agent", label: "Shares the quotation" },
 ];
 
 const HOLD = [2400, 3000, 3200, 3200, 3400];
 
 const TRACK_COLS = "grid-cols-2 md:grid-cols-3 lg:grid-cols-5";
+
+// At the lg breakpoint dots are pinned to fixed 0/25/50/75/100% points (equal gaps,
+// first and last flush with the line's ends) instead of sitting at grid-column starts.
+const LG_DOT_POSITION = [
+  "lg:left-0 lg:translate-x-0",
+  "lg:left-1/4 lg:-translate-x-1/2",
+  "lg:left-1/2 lg:-translate-x-1/2",
+  "lg:left-3/4 lg:-translate-x-1/2",
+  "lg:left-full lg:-translate-x-full",
+];
+
+// Labels reuse the dots' fixed positions so each one sits directly under its own dot.
+const LG_LABEL_ALIGN = ["lg:text-left", "lg:text-center", "lg:text-center", "lg:text-center", "lg:text-right"];
 
 export function HeroWorkflowTimeline() {
   const [i, setI] = useState(0);
@@ -47,7 +60,7 @@ export function HeroWorkflowTimeline() {
       onMouseLeave={() => setPaused(false)}
     >
       {/* Dot track: dots only, one shared grid, so nothing else can affect row height */}
-      <div className={`relative grid gap-x-4 ${TRACK_COLS}`}>
+      <div className={`relative grid gap-x-4 ${TRACK_COLS} lg:h-6`}>
         <div className="absolute inset-0 hidden items-center lg:flex">
           <div className="h-px w-full bg-[#DAD5C8]" />
         </div>
@@ -66,7 +79,7 @@ export function HeroWorkflowTimeline() {
               key={n}
               type="button"
               onClick={() => setI(n)}
-              className="flex h-6 cursor-pointer items-center border-none bg-none p-0"
+              className={`flex h-6 cursor-pointer items-center border-none bg-none p-0 lg:absolute lg:top-1/2 lg:-translate-y-1/2 ${LG_DOT_POSITION[n]}`}
             >
               <span
                 className="relative z-10 block h-[11px] w-[11px] rounded-full border-2 transition-colors duration-300"
@@ -75,7 +88,7 @@ export function HeroWorkflowTimeline() {
                   background: s.you ? "#FCFBF7" : done || now ? "#1A1A1A" : "#FCFBF7",
                 }}
               >
-                {now && (
+                {now && n !== STEPS.length - 1 && (
                   <span className="absolute -inset-1.5 animate-[qa-ring_2.4s_cubic-bezier(.2,.7,.3,1)_infinite] rounded-full border border-[#1A1A1A] opacity-0" />
                 )}
               </span>
@@ -84,8 +97,8 @@ export function HeroWorkflowTimeline() {
         })}
       </div>
 
-      {/* Label track: separate grid, same column template so it stays aligned under the dots */}
-      <div className={`mt-4 grid gap-x-4 gap-y-8 ${TRACK_COLS} lg:gap-y-0`}>
+      {/* Label track: separate grid for mobile/tablet wrap; pinned to the dots' fixed points at lg */}
+      <div className={`relative mt-4 grid gap-x-4 gap-y-8 ${TRACK_COLS} lg:min-h-[3.75rem] lg:gap-y-0`}>
         {STEPS.map((s, n) => {
           const done = n < i;
           const now = n === i;
@@ -95,7 +108,7 @@ export function HeroWorkflowTimeline() {
               type="button"
               onClick={() => setI(n)}
               onFocus={() => setI(n)}
-              className="block cursor-pointer border-none bg-none p-0 pr-2.5 text-left font-sans"
+              className={`block cursor-pointer border-none bg-none p-0 pr-2.5 text-left font-sans lg:w-[15ch] lg:p-0 lg:top-0 ${LG_DOT_POSITION[n]} ${LG_LABEL_ALIGN[n]} lg:absolute`}
             >
               <span
                 className="mb-1.5 block font-mono text-[9.5px] uppercase tracking-[0.14em] transition-colors duration-300"
@@ -104,7 +117,7 @@ export function HeroWorkflowTimeline() {
                 {s.actor}
               </span>
               <span
-                className="block max-w-[15ch] text-[13.5px] leading-[1.35] transition-colors duration-300"
+                className="block max-w-[15ch] text-[13.5px] leading-[1.35] transition-colors duration-300 lg:max-w-none"
                 style={{
                   color: now ? "#1A1A1A" : done ? "#4A4A45" : "#71716A",
                   fontWeight: now ? 500 : 400,

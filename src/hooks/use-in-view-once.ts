@@ -24,8 +24,14 @@ export function useInViewOnce<T extends HTMLElement>(threshold = 0.15) {
       { threshold }
     );
 
-    observer.observe(el);
-    return () => observer.disconnect();
+    // Wait a frame so the hidden starting state paints at least once before
+    // the observer's first check can immediately flip inView to true for
+    // content that's already in the viewport on load (e.g. near the top of the page).
+    const raf = requestAnimationFrame(() => observer.observe(el));
+    return () => {
+      cancelAnimationFrame(raf);
+      observer.disconnect();
+    };
   }, [inView, threshold]);
 
   return { ref, inView };

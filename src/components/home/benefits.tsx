@@ -30,12 +30,12 @@ export function Benefits() {
     >
       <div className="mx-auto max-w-[1200px] px-6 py-12 md:px-8 md:py-20">
         <div
-          className={`mb-14 max-w-[750px] opacity-100 motion-safe:transition-all motion-safe:duration-700 motion-safe:ease-out ${
+          className={`mx-auto mb-14 max-w-[750px] text-center opacity-100 motion-safe:transition-all motion-safe:duration-700 motion-safe:ease-out ${
             inView ? "" : "motion-safe:-translate-x-10 motion-safe:opacity-0"
           }`}
         >
           <h2
-            className="text-[2rem] font-semibold leading-[1.15] tracking-[-0.5px] text-ink md:text-[3rem]"
+            className="text-[1.75rem] font-semibold leading-[1.15] tracking-[-0.5px] text-ink md:text-[2.5rem]"
             style={{ fontFamily: "'Fraunces', Georgia, serif" }}
           >
             Scale Your Business, Not Your Team.
