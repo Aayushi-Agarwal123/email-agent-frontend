@@ -17,10 +17,10 @@ export function FinalCta() {
               className="text-[24px] leading-[1.25] tracking-[-0.01em] text-[#1A1A1A] md:text-[28px]"
               style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}
             >
-              Your next RFQ could be quoted within the hour.
+              See It Work With Your Own RFQs.
             </h2>
             <p className="mt-3 max-w-md text-[14.5px] leading-[1.6] text-[#71716A] transition-colors duration-300 ease-out group-hover:text-[#5C5C55]">
-              Connect your inbox, upload your price list, and you're live. No card required for the first 20 quotations.
+              Connect your inbox and upload your catalog. We'll prepare your first 20 quotations at no cost.
             </p>
           </div>
 

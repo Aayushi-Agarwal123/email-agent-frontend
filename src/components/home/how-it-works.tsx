@@ -1,21 +1,21 @@
 const STEPS = [
   {
     n: "01",
-    title: "An RFQ arrives",
+    title: "RFQ Received",
     description:
-      "The agent watches your inbox for quotation requests and reads every line: items, quantities, delivery terms.",
+      "Monitors your inbox, extracts every line item, quantity, and requirement, and turns unstructured RFQs into structured requests.",
   },
   {
     n: "02",
-    title: "It prices from your catalog",
+    title: "Intelligent Retrieval & Pricing",
     description:
-      "Every line is matched against the price data you uploaded. Anything it can't price is flagged for you, never guessed.",
+      "Understands customer requirements, finds the right products across complex catalogs, asks clarifying questions when needed, and generates accurate pricing.",
   },
   {
     n: "03",
-    title: "You approve, quotation sent",
+    title: "Review & Approve",
     description:
-      "A finished quotation lands in your review queue. One click to approve, and it's emailed with a full audit trail.",
+      "Review the draft quotation, approve it, and send it with a complete audit trail.",
   },
 ];
 
@@ -28,16 +28,15 @@ export function HowItWorks() {
     >
       <div className="container mx-auto px-4">
         <div className="max-w-xl">
-          <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-[#9A998F]">How it works</p>
           <h2
-            className="mt-3 text-[28px] leading-[1.15] text-[#1A1A1A] md:text-[34px]"
-            style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 400 }}
+            className="text-[2rem] font-semibold leading-[1.15] tracking-[-0.5px] text-[#1A1A1A] md:text-[3rem]"
+            style={{ fontFamily: "'Fraunces', Georgia, serif" }}
           >
-            One workflow, three steps.
+            How It Works
           </h2>
         </div>
 
-        <div className="mt-14 grid gap-10 border-t border-[#DAD5C8] pt-10 md:grid-cols-3 md:gap-12">
+        <div className="mt-10 grid gap-10 md:grid-cols-3 md:gap-12">
           {STEPS.map((s) => (
             <div
               key={s.n}

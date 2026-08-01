@@ -1,18 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 
 const STEPS: { actor: string; label: string; you?: boolean }[] = [
-  { actor: "Buyer", label: "RFQ email arrives" },
   { actor: "Agent", label: "Reads the email" },
   { actor: "Agent", label: "Matches your catalog" },
   { actor: "Agent", label: "Drafts the quotation" },
-  { actor: "You", label: "Review it", you: true },
-  { actor: "You", label: "Approve", you: true },
-  { actor: "Agent", label: "Sent to the buyer" },
+  { actor: "You", label: "Review and Approve", you: true },
+  { actor: "Agent", label: "Sent to the customer" },
 ];
 
-const HOLD = [2600, 2400, 3000, 3200, 3000, 2800, 3400];
+const HOLD = [2400, 3000, 3200, 3200, 3400];
 
-const TRACK_COLS = "grid-cols-2 md:grid-cols-4 lg:grid-cols-7";
+const TRACK_COLS = "grid-cols-2 md:grid-cols-3 lg:grid-cols-5";
 
 export function HeroWorkflowTimeline() {
   const [i, setI] = useState(0);

@@ -1,10 +1,14 @@
 import { useInViewOnce } from "@/hooks/use-in-view-once";
 
 const ROWS = [
-  { label: "Time to first quote", manual: "1–2 days", agent: "34 min avg" },
-  { label: "RFQs missed", manual: "~1 in 5", agent: "0" },
-  { label: "Pricing errors", manual: "frequent", agent: "catalog only" },
-  { label: "Hours per week", manual: "10–15 h", agent: "~1 h" },
+  { label: "Time to first quote", manual: "1–2 days", agent: "5 min avg" },
+  { label: "RFQ visibility", manual: "Manual inbox monitoring", agent: "Every RFQ captured automatically" },
+  { label: "Pricing accuracy", manual: "Prone to manual errors", agent: "Catalog-based pricing" },
+  {
+    label: "Scalability",
+    manual: "Each new RFQ adds more manual work",
+    agent: "Handle more RFQs without increasing team workload",
+  },
 ];
 
 const fadeUp = (inView: boolean) =>
@@ -64,7 +68,7 @@ export function HeroBusinessImpact() {
           }}
         >
           <span className="mb-[1.6rem] text-[11.5px] font-bold uppercase tracking-[2.5px] text-green">
-            With QuoteAgent
+            With QuoteHub
           </span>
           <div className="grid flex-1 gap-[1.5rem] [grid-auto-rows:1fr]">
             {ROWS.map((row) => (

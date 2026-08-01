@@ -2,20 +2,20 @@ import { useInViewOnce } from "@/hooks/use-in-view-once";
 
 const BENEFITS = [
   {
-    title: "Never miss an RFQ",
-    description: "Every email is read the moment it lands, even during your busiest hours.",
+    title: "Capture Every Opportunity",
+    description: "Every RFQ is processed as soon as it arrives, so no opportunity goes unnoticed.",
   },
   {
-    title: "Built for large catalogs",
-    description: "Price thousands of SKUs without a manual lookup for every line.",
+    title: "Handle Higher Volumes",
+    description: "Process thousands of products and growing RFQ volumes without adding manual effort.",
   },
   {
-    title: "Faster than manual quoting",
-    description: "Cut average response time from 1–2 days to under an hour.",
+    title: "Respond Before Competitors",
+    description: "Prepare quotations within minutes to improve response times and win more business.",
   },
   {
-    title: "Consistent pricing, every time",
-    description: "The same catalog and logic price every quote, no variation by who typed it.",
+    title: "Stay Consistent as You Grow",
+    description: "Every quotation follows the same pricing logic, regardless of volume.",
   },
 ];
 
@@ -34,14 +34,11 @@ export function Benefits() {
             inView ? "" : "motion-safe:-translate-x-10 motion-safe:opacity-0"
           }`}
         >
-          <p className="font-mono text-[11px] font-medium uppercase tracking-[2.8px] text-gold">
-            Built for industrial suppliers
-          </p>
           <h2
-            className="mt-3 text-[2rem] font-semibold leading-[1.15] tracking-[-0.5px] text-ink md:text-[3rem]"
+            className="text-[2rem] font-semibold leading-[1.15] tracking-[-0.5px] text-ink md:text-[3rem]"
             style={{ fontFamily: "'Fraunces', Georgia, serif" }}
           >
-            Quoted the way your business actually runs.
+            Scale Your Business, Not Your Team.
           </h2>
         </div>
 

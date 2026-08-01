@@ -18,7 +18,7 @@ export function HomeNav() {
             className="text-[17px] tracking-tight text-[#1A1A1A]"
             style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}
           >
-            Quotation Agent
+            QuoteHub
           </span>
         </div>
 

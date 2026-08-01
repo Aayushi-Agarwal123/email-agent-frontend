@@ -8,11 +8,8 @@ export function Hero() {
   return (
     <section className="bg-[#FCFBF7] px-4 py-11 md:py-[4.75rem]" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
       <div className="container mx-auto">
-        <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-[#71716A]">
-          For industrial suppliers who quote by email
-        </p>
         <h1
-          className="mt-5 max-w-[19ch] text-[2.25rem] leading-[1.03] tracking-[-0.018em] text-[#1A1A1A] md:text-[3.5rem]"
+          className="max-w-[19ch] text-[2.25rem] leading-[1.03] tracking-[-0.018em] text-[#1A1A1A] md:text-[3.5rem]"
           style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 400 }}
         >
           Turn incoming RFQs into ready-to-send quotations, automatically.
@@ -30,14 +27,10 @@ export function Hero() {
           <button
             type="button"
             onClick={() => navigate("/register")}
-            className="inline-flex items-center gap-2.5 rounded-[2px] border-[1.5px] border-[#1A1A1A] bg-[#1A1A1A] px-6 py-3.5 text-[15px] font-medium text-[#FCFBF7] transition-transform hover:-translate-y-px"
+            className="inline-flex items-center gap-2.5 rounded-[2px] border-[1.5px] border-[#1A1A1A] bg-[#1A1A1A] px-6 py-3.5 text-[15px] font-medium text-[#FCFBF7] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-[#FCFBF7] hover:text-[#1A1A1A] hover:shadow-[0_12px_32px_rgba(26,26,26,0.15)]"
           >
             Get started<span aria-hidden="true">→</span>
           </button>
-          <span className="flex items-baseline gap-2 text-[13.5px] text-[#71716A]">
-            <span className="h-[5px] w-[5px] -translate-y-0.5 rounded-full bg-[#1D7A46]" />
-            Every quotation stays under your control. Nothing is sent without your approval.
-          </span>
         </div>
 
         <HeroWorkflowTimeline />

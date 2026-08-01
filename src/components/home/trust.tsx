@@ -1,19 +1,20 @@
 const POINTS = [
   {
-    title: "You approve every quotation",
-    description: "Nothing is emailed to a customer until you click approve. The agent drafts; you decide.",
+    title: "Human Approval",
+    description: "Every quotation is reviewed before it's sent. The AI drafts, you approve.",
   },
   {
-    title: "Your data stays yours",
-    description: "Your catalog and inbox are never shared, sold, or used to train anything outside your account.",
+    title: "Private by Default",
+    description: "Your catalog, inbox, and customer data stay within your workspace.",
   },
   {
-    title: "Full audit trail",
-    description: "Every quotation, drafted, edited, or approved, is logged with a timestamp you can review anytime.",
+    title: "Complete Audit Trail",
+    description: "Every quotation, approval, edit, and customer interaction is logged with a searchable timestamp.",
   },
   {
-    title: "Read-and-send access only",
-    description: "A verified connection to one mailbox. The agent never deletes or moves your mail.",
+    title: "Controlled Email Access",
+    description:
+      "The AI works within a defined RFQ workflow, accessing only the conversations required to understand requests and prepare quotations.",
   },
 ];
 
@@ -24,12 +25,11 @@ export function Trust() {
     <section id="trust" className="border-t border-hairline bg-cream py-16 md:py-24" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
       <div className="container mx-auto px-4">
         <div className="max-w-xl">
-          <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-[#9A998F]">Why you can trust it</p>
           <h2
-            className="mt-3 text-[28px] leading-[1.15] text-ink md:text-[34px]"
-            style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 400 }}
+            className="text-[2rem] font-semibold leading-[1.15] tracking-[-0.5px] text-ink md:text-[3rem]"
+            style={{ fontFamily: "'Fraunces', Georgia, serif" }}
           >
-            Built for suppliers who can't afford a mistake in a customer's inbox.
+            Built for Enterprise Reliability
           </h2>
         </div>
 
