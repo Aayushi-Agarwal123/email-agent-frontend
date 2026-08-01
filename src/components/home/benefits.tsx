@@ -28,7 +28,7 @@ export function Benefits() {
       className="border-t border-hairline bg-cream"
       style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
     >
-      <div className="mx-auto max-w-[1200px] px-6 py-12 md:px-8 md:py-20">
+      <div className="container mx-auto px-4 py-12 md:py-20">
         <div
           className={`mx-auto mb-14 max-w-[750px] text-center opacity-100 motion-safe:transition-all motion-safe:duration-700 motion-safe:ease-out ${
             inView ? "" : "motion-safe:-translate-x-10 motion-safe:opacity-0"
@@ -42,21 +42,23 @@ export function Benefits() {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-          {BENEFITS.map((b, idx) => (
-            <div
-              key={b.title}
-              className={`h-full opacity-100 motion-safe:transition-all motion-safe:ease-out motion-safe:[transition-duration:800ms] ${
-                inView ? "" : "motion-safe:translate-y-10 motion-safe:opacity-0"
-              }`}
-              style={{ transitionDelay: `${(idx + 1) * 100}ms` }}
-            >
-              <div className="flex h-full flex-col border-2 border-ink bg-cream p-[1.8rem] transition-all duration-[350ms] ease-[cubic-bezier(0.25,0.46,0.45,0.94)] hover:scale-[1.02] hover:bg-[color-mix(in_srgb,hsl(var(--ink))_2%,hsl(var(--cream)))] hover:shadow-[0_10px_30px_rgba(26,26,26,0.07)] md:p-8">
-                <h3 className="mb-[0.9rem] text-[1.05rem] font-bold text-ink">{b.title}</h3>
-                <p className="flex-1 text-[0.93rem] leading-[1.75] text-ink-muted">{b.description}</p>
+        <div className="relative mx-auto max-w-[1000px]">
+          <div className="relative grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-10">
+            {BENEFITS.map((b, idx) => (
+              <div
+                key={b.title}
+                className={`opacity-100 motion-safe:transition-all motion-safe:ease-out motion-safe:[transition-duration:800ms] ${
+                  inView ? "" : "motion-safe:translate-y-10 motion-safe:opacity-0"
+                }`}
+                style={{ transitionDelay: `${(idx + 1) * 100}ms` }}
+              >
+                <div className="flex h-full min-h-[180px] flex-col border-2 border-ink bg-cream p-6 transition-all duration-[350ms] ease-[cubic-bezier(0.25,0.46,0.45,0.94)] hover:scale-[1.02] hover:bg-[color-mix(in_srgb,hsl(var(--ink))_2%,hsl(var(--cream)))] hover:shadow-[0_10px_30px_rgba(26,26,26,0.07)]">
+                  <h3 className="mb-[0.9rem] text-[1.05rem] font-bold text-ink">{b.title}</h3>
+                  <p className="text-[0.93rem] leading-[1.75] text-ink-muted">{b.description}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>

@@ -19,7 +19,7 @@ const POINTS = [
   {
     title: "Controlled Email Access",
     description:
-      "The AI operates within a defined RFQ workflow, accessing only the emails required to understand requests and prepare quotations.",
+      "The AI operates within a defined RFQ workflow, accessing only the emails required to understand customer requests.",
   },
 ];
 

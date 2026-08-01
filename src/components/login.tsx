@@ -41,10 +41,10 @@ export function Login() {
       <div className="w-full max-w-sm rounded-xl border bg-card p-8 shadow-sm">
         <div className="mb-6 flex flex-col items-center gap-3 text-center">
           <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary text-lg font-bold text-primary-foreground">
-            Q
+            F
           </div>
           <div>
-            <h1 className="text-lg font-semibold">Quotation Agent</h1>
+            <h1 className="text-lg font-semibold">FastQuote</h1>
             <p className="text-sm text-muted-foreground">Sign in to view your dashboard</p>
           </div>
         </div>

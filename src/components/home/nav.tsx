@@ -22,11 +22,6 @@ export function HomeNav() {
           </span>
         </div>
 
-        <nav className="hidden items-center gap-5 text-[13px] font-medium sm:flex">
-          <a href="#how-it-works" className="text-[#71716A] hover:text-[#1A1A1A]">How it works</a>
-          <a href="#trust" className="text-[#71716A] hover:text-[#1A1A1A]">Security</a>
-        </nav>
-
         <div className="flex items-center gap-4">
           <Link to="/signin" className="text-[13px] font-medium text-[#71716A] hover:text-[#1A1A1A]">
             Sign in

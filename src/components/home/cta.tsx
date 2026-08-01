@@ -25,7 +25,7 @@ export function FinalCta() {
 
             <div>
               <h2
-                className="text-[24px] leading-[1.25] tracking-[-0.01em] text-[#1A1A1A] md:text-[28px]"
+                className="text-[20px] leading-[1.25] tracking-[-0.01em] text-[#1A1A1A] md:text-[24px]"
                 style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}
               >
                 Connect your inbox and upload your catalog.

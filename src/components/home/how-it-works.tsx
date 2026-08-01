@@ -5,19 +5,19 @@ const STEPS = [
     n: "01",
     title: "RFQ Processing",
     description:
-      "Monitors your inbox, understands complex natural language requests, extracts requirements from unstructured data, with high accuracy.",
+      "Monitors your inbox, understands complex requests, extracts requirements from unstructured data with high accuracy.",
   },
   {
     n: "02",
     title: "Intelligent Pricing",
     description:
-      "Understands customer requirements, finds the right products across complex catalogs, asks clarifying questions, and generates accurate pricing.",
+      "Understands customer requirements, matches products across complex catalogs, asks clarifying questions, and generates accurate pricing.",
   },
   {
     n: "03",
     title: "Review & Approval",
     description:
-      "Review generated quotations, verify products and pricing, approve with confidence, then send with complete audit trails and history.",
+      "Review generated quotations, verify products and pricing, approve with confidence, then send with complete audit trails.",
   },
 ];
 

@@ -19,7 +19,7 @@ export function PublicLayout() {
               className="text-[17px] tracking-tight"
               style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}
             >
-              Quotation Agent
+              FastQuote
             </span>
           </Link>
           <Link
