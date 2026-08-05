@@ -18,7 +18,7 @@ which makes local development and previews trivial.
 
 ### Landing Page
 
-![Landing Page](Screenshots/landing-page.png)
+![Landingpage](Screenshots/Landingpage.png)
 
 ### Hero-Bussiness
 ![Hero-Bussiness](Screenshots/Hero-Bussiness.png)
@@ -41,11 +41,11 @@ which makes local development and previews trivial.
 
 ### Register
 
-![Register](Screenshots/register.png)
+![Register](Screenshots/Register.png)
 
 ### Sign In
 
-![Sign In](Screenshots/signin.png)
+![SignIn](Screenshots/SignIn.png)
 
 
 
