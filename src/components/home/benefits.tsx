@@ -1,21 +1,35 @@
 import { useInViewOnce } from "@/hooks/use-in-view-once";
+import {
+  TrendingUp,
+  Layers3,
+  Zap,
+  BarChart3,
+} from "lucide-react";
 
 const BENEFITS = [
   {
     title: "Capture Every Opportunity",
-    description: "Every RFQ is processed as soon as it arrives, so no opportunity goes unnoticed.",
+    description:
+      "Every RFQ is processed the moment it arrives, ensuring no business opportunity is missed.",
+    icon: TrendingUp,
   },
   {
     title: "Handle Higher Volumes",
-    description: "Process thousands of products and growing RFQ volumes without adding manual effort.",
+    description:
+      "Scale effortlessly with thousands of products and increasing RFQ requests without expanding your team.",
+    icon: Layers3,
   },
   {
     title: "Respond Before Competitors",
-    description: "Prepare quotations within minutes to improve response times and win more business.",
+    description:
+      "Generate quotations within minutes, helping your business respond faster and close more deals.",
+    icon: Zap,
   },
   {
     title: "Stay Consistent as You Grow",
-    description: "Every quotation follows the same pricing logic, regardless of volume.",
+    description:
+      "Maintain accurate pricing and professional quotations with AI-driven consistency across every response.",
+    icon: BarChart3,
   },
 ];
 
@@ -25,41 +39,90 @@ export function Benefits() {
   return (
     <section
       ref={ref}
-      className="border-t border-hairline bg-cream"
+      className="relative overflow-hidden border-t border-white/10 bg-[#0B1120] py-20 md:py-28"
       style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
     >
-      <div className="container mx-auto px-4 py-12 md:py-20">
+      {/* Background Glow */}
+      <div className="absolute left-0 top-0 h-96 w-96 rounded-full bg-cyan-500/10 blur-[140px]" />
+      <div className="absolute right-0 bottom-0 h-96 w-96 rounded-full bg-blue-500/10 blur-[140px]" />
+
+      <div className="relative mx-auto max-w-7xl px-6">
+
+        {/* Heading */}
         <div
-          className={`mx-auto mb-14 max-w-[750px] text-center opacity-100 motion-safe:transition-all motion-safe:duration-700 motion-safe:ease-out ${
-            inView ? "" : "motion-safe:-translate-x-10 motion-safe:opacity-0"
+          className={`mx-auto max-w-3xl text-center transition-all duration-1000 ${
+            inView
+              ? "translate-y-0 opacity-100"
+              : "translate-y-10 opacity-0"
           }`}
         >
+          <span className="inline-flex animate-pulse rounded-full border border-cyan-400/20 bg-cyan-500/10 px-4 py-2 text-sm font-medium text-cyan-300 shadow-lg shadow-cyan-500/20">
+            Business Benefits
+          </span>
+
           <h2
-            className="text-[1.75rem] font-semibold leading-[1.15] tracking-[-0.5px] text-ink md:text-[2.5rem]"
+            className="mt-6 bg-gradient-to-r from-white via-cyan-200 to-blue-300 bg-clip-text text-4xl font-semibold text-transparent md:text-5xl"
             style={{ fontFamily: "'Fraunces', Georgia, serif" }}
           >
-            Scale Your Business, Not Your Team.
+            Scale Your Business, Not Your Team
           </h2>
+
+          <p className="mt-6 text-lg leading-8 text-slate-400">
+            FastQuote empowers your sales process with AI automation,
+            enabling faster quotations, greater efficiency,
+            and sustainable business growth.
+          </p>
         </div>
 
-        <div className="relative mx-auto max-w-[1000px]">
-          <div className="relative grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-10">
-            {BENEFITS.map((b, idx) => (
+        {/* Cards */}
+        <div className="mt-16 grid gap-8 md:grid-cols-2">
+          {BENEFITS.map((b, idx) => {
+            const Icon = b.icon;
+
+            return (
               <div
                 key={b.title}
-                className={`opacity-100 motion-safe:transition-all motion-safe:ease-out motion-safe:[transition-duration:800ms] ${
-                  inView ? "" : "motion-safe:translate-y-10 motion-safe:opacity-0"
+                className={`group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl transition-all duration-500 hover:-translate-y-4 hover:scale-[1.03] hover:border-cyan-400/40 hover:shadow-2xl hover:shadow-cyan-500/20 ${
+                  inView
+                    ? "translate-y-0 opacity-100"
+                    : "translate-y-12 opacity-0"
                 }`}
-                style={{ transitionDelay: `${(idx + 1) * 100}ms` }}
+                style={{
+                  transitionDelay: `${idx * 180}ms`,
+                }}
               >
-                <div className="flex h-full min-h-[180px] flex-col border-2 border-ink bg-cream p-6 transition-all duration-[350ms] ease-[cubic-bezier(0.25,0.46,0.45,0.94)] hover:scale-[1.02] hover:bg-[color-mix(in_srgb,hsl(var(--ink))_2%,hsl(var(--cream)))] hover:shadow-[0_10px_30px_rgba(26,26,26,0.07)]">
-                  <h3 className="mb-[0.9rem] text-[1.05rem] font-bold text-ink">{b.title}</h3>
-                  <p className="text-[0.93rem] leading-[1.75] text-ink-muted">{b.description}</p>
+
+                {/* Shine Effect */}
+                <div className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+                  <div className="absolute -left-28 top-0 h-full w-24 rotate-12 bg-white/10 blur-xl transition-all duration-700 group-hover:left-full"></div>
                 </div>
+
+                {/* Icon */}
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 group-hover:shadow-cyan-500/60">
+                  <Icon size={26} />
+                </div>
+
+                {/* Title */}
+                <h3
+                  className="mt-7 text-2xl font-semibold text-white transition-colors duration-300 group-hover:text-cyan-300"
+                  style={{ fontFamily: "'Fraunces', Georgia, serif" }}
+                >
+                  {b.title}
+                </h3>
+
+                {/* Description */}
+                <p className="mt-4 leading-7 text-slate-400 transition-colors duration-300 group-hover:text-slate-300">
+                  {b.description}
+                </p>
+
+                {/* Bottom Accent */}
+                <div className="mt-8 h-[3px] w-0 rounded-full bg-gradient-to-r from-cyan-400 via-blue-500 to-cyan-300 transition-all duration-500 group-hover:w-full"></div>
+
               </div>
-            ))}
-          </div>
+            );
+          })}
         </div>
+
       </div>
     </section>
   );

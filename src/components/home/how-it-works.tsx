@@ -28,46 +28,80 @@ export function HowItWorks() {
     <section
       ref={ref}
       id="how-it-works"
-      className="border-t border-[#DAD5C8] bg-[#FCFBF7] py-16 md:py-24"
+      className="relative overflow-hidden border-t border-white/10 bg-[#0B1120] py-20 md:py-28"
       style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
     >
-      <div className="container mx-auto px-4">
+      {/* Background Glow */}
+      <div className="absolute left-0 top-0 h-96 w-96 rounded-full bg-cyan-500/10 blur-[140px]" />
+      <div className="absolute right-0 bottom-0 h-96 w-96 rounded-full bg-blue-500/10 blur-[140px]" />
+
+      <div className="relative mx-auto max-w-7xl px-6">
+
+        {/* Heading */}
         <div
-          className={`mx-auto max-w-xl text-center opacity-100 motion-safe:transition-all motion-safe:duration-700 motion-safe:ease-out ${
-            inView ? "" : "motion-safe:-translate-x-10 motion-safe:opacity-0"
+          className={`mx-auto max-w-3xl text-center transition-all duration-1000 ${
+            inView
+              ? "translate-y-0 opacity-100"
+              : "translate-y-10 opacity-0"
           }`}
         >
+          <span className="inline-flex animate-pulse rounded-full border border-cyan-400/20 bg-cyan-500/10 px-4 py-2 text-sm font-medium text-cyan-300 shadow-lg shadow-cyan-500/20">
+            Workflow
+          </span>
+
           <h2
-            className="text-[1.75rem] font-semibold leading-[1.15] tracking-[-0.5px] text-[#1A1A1A] md:text-[2.5rem]"
+            className="mt-6 bg-gradient-to-r from-white via-cyan-200 to-blue-300 bg-clip-text text-4xl font-semibold text-transparent md:text-5xl"
             style={{ fontFamily: "'Fraunces', Georgia, serif" }}
           >
-            How It Works
+            How FastQuote Works
           </h2>
+
+          <p className="mt-6 text-lg leading-8 text-slate-400">
+            A streamlined AI workflow that transforms incoming RFQs into
+            professional quotations in just a few minutes.
+          </p>
         </div>
 
-        <div className="mt-10 grid gap-10 md:grid-cols-3 md:gap-12">
+        {/* Cards */}
+        <div className="mt-16 grid gap-8 lg:grid-cols-3">
           {STEPS.map((s, idx) => (
             <div
               key={s.n}
-              className={`opacity-100 motion-safe:transition-all motion-safe:ease-out motion-safe:[transition-duration:800ms] ${
-                inView ? "" : "motion-safe:translate-y-10 motion-safe:opacity-0"
+              className={`group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl transition-all duration-500 hover:-translate-y-4 hover:scale-[1.03] hover:border-cyan-400/40 hover:shadow-2xl hover:shadow-cyan-500/20 ${
+                inView
+                  ? "translate-y-0 opacity-100"
+                  : "translate-y-12 opacity-0"
               }`}
-              style={{ transitionDelay: `${(idx + 1) * 100}ms` }}
+              style={{
+                transitionDelay: `${idx * 180}ms`,
+              }}
             >
-              <div className="group flex h-full flex-col border-2 border-[#1A1A1A] bg-[#FCFBF7] p-6 transition-all duration-[350ms] ease-[cubic-bezier(0.25,0.46,0.45,0.94)] hover:scale-[1.02] hover:bg-[color-mix(in_srgb,#1A1A1A_2%,#FCFBF7)] hover:shadow-[0_10px_30px_rgba(26,26,26,0.07)]">
-                <span
-                  className="flex h-11 w-11 items-center justify-center rounded-full border-[1.5px] border-[#DAD5C8] font-mono text-[16px] font-semibold text-[#9A998F] transition-all duration-300 ease-out group-hover:border-[#1A1A1A] group-hover:bg-[#1A1A1A] group-hover:text-[#FCFBF7] motion-safe:group-hover:scale-110"
-                >
-                  {s.n}
-                </span>
-                <h3
-                  className="mt-6 text-[19px] text-[#1A1A1A]"
-                  style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}
-                >
-                  {s.title}
-                </h3>
-                <p className="mt-2.5 text-[14.5px] leading-[1.6] text-[#71716A]">{s.description}</p>
+
+              {/* Shine Animation */}
+              <div className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+                <div className="absolute -left-28 top-0 h-full w-24 rotate-12 bg-white/10 blur-xl transition-all duration-700 group-hover:left-full"></div>
               </div>
+
+              {/* Step Number */}
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 text-lg font-bold text-white shadow-lg transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 group-hover:shadow-cyan-500/60">
+                {s.n}
+              </div>
+
+              {/* Title */}
+              <h3
+                className="mt-8 text-2xl font-semibold text-white transition-colors duration-300 group-hover:text-cyan-300"
+                style={{ fontFamily: "'Fraunces', Georgia, serif" }}
+              >
+                {s.title}
+              </h3>
+
+              {/* Description */}
+              <p className="mt-5 leading-7 text-slate-400 transition-colors duration-300 group-hover:text-slate-300">
+                {s.description}
+              </p>
+
+              {/* Bottom Accent */}
+              <div className="mt-8 h-[3px] w-0 rounded-full bg-gradient-to-r from-cyan-400 via-blue-500 to-cyan-300 transition-all duration-500 group-hover:w-full"></div>
             </div>
           ))}
         </div>

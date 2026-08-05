@@ -1,4 +1,4 @@
-import { MailIcon } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useInViewOnce } from "@/hooks/use-in-view-once";
 
@@ -9,39 +9,74 @@ export function FinalCta() {
   return (
     <section
       ref={ref}
-      className="border-t border-[#DAD5C8] bg-[#FCFBF7] py-20 md:py-28"
+      className="border-t border-white/10 bg-[#0B1120] py-24"
       style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
     >
-      <div className="container mx-auto px-4">
+      <div className="mx-auto max-w-6xl px-6">
         <div
-          className={`mx-auto max-w-4xl opacity-100 motion-safe:transition-all motion-safe:ease-out motion-safe:[transition-duration:800ms] ${
-            inView ? "" : "motion-safe:translate-y-10 motion-safe:opacity-0"
+          className={`overflow-hidden rounded-[32px] border border-cyan-400/20 bg-gradient-to-br from-slate-900 via-[#111827] to-[#0F172A] p-12 shadow-2xl transition-all duration-700 ${
+            inView
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-8"
           }`}
         >
-          <div className="group grid grid-cols-1 items-center gap-6 border border-[#DAD5C8] border-l-[6px] border-l-[#1A1A1A] bg-[#FCFBF7] px-6 py-8 shadow-[0_12px_32px_rgba(26,26,26,0.04)] transition-shadow duration-300 ease-out hover:shadow-[0_16px_48px_rgba(26,26,26,0.08)] sm:grid-cols-[60px_1fr_auto] sm:gap-10 sm:px-10 sm:py-12">
-            <div className="hidden h-[60px] w-[60px] items-center justify-center rounded-[2px] bg-[#F5F3EC] transition-transform duration-300 ease-out group-hover:scale-105 sm:flex">
-              <MailIcon className="h-8 w-8 text-[#1A1A1A]" strokeWidth={1.5} />
+          <div className="flex flex-col items-center text-center">
+
+            {/* Icon */}
+
+            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 shadow-xl shadow-cyan-500/30">
+              <Sparkles size={36} className="text-white" />
             </div>
 
-            <div>
-              <h2
-                className="text-[20px] leading-[1.25] tracking-[-0.01em] text-[#1A1A1A] md:text-[24px]"
-                style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 500 }}
-              >
-                Connect your inbox and upload your catalog.
-              </h2>
-              <p className="mt-3 max-w-md text-[14.5px] leading-[1.6] text-[#71716A] transition-colors duration-300 ease-out group-hover:text-[#5C5C55]">
-                We'll prepare your first 20 quotations at no cost.
-              </p>
-            </div>
+            {/* Heading */}
 
-            <button
-              type="button"
-              onClick={() => navigate("/register")}
-              className="inline-flex items-center justify-center gap-2.5 rounded-[2px] border-[1.5px] border-[#1A1A1A] bg-[#1A1A1A] px-7 py-3.5 text-[15px] font-medium text-[#FCFBF7] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-[#FCFBF7] hover:text-[#1A1A1A] hover:shadow-[0_12px_32px_rgba(26,26,26,0.15)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#1A1A1A] active:translate-y-0 active:shadow-none sm:w-auto"
+            <h2
+              className="mt-8 text-4xl font-semibold text-white md:text-5xl"
+              style={{ fontFamily: "'Fraunces', Georgia, serif" }}
             >
-              Start setup<span aria-hidden="true">→</span>
-            </button>
+              Ready to Automate Your Quoting Process?
+            </h2>
+
+            {/* Description */}
+
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-400">
+              Connect your inbox, upload your product catalog, and let
+              FastQuote generate professional quotations in minutes instead of
+              hours.
+            </p>
+
+            {/* Buttons */}
+
+            <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+
+              <button
+                onClick={() => navigate("/register")}
+                className="group inline-flex items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 px-8 py-4 text-lg font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-cyan-500/40"
+              >
+                Get Started Free
+                <ArrowRight
+                  size={20}
+                  className="transition-transform duration-300 group-hover:translate-x-1"
+                />
+              </button>
+
+              <button
+                onClick={() => navigate("/signin")}
+                className="rounded-xl border border-white/15 bg-white/5 px-8 py-4 text-lg font-semibold text-white transition-all duration-300 hover:bg-white/10"
+              >
+                Sign In
+              </button>
+
+            </div>
+
+            {/* Bottom Text */}
+
+            <p className="mt-8 text-sm text-slate-500">
+              ✓ No Credit Card Required &nbsp;&nbsp; • &nbsp;&nbsp;
+              ✓ Enterprise Ready &nbsp;&nbsp; • &nbsp;&nbsp;
+              ✓ AI Powered
+            </p>
+
           </div>
         </div>
       </div>

@@ -55,18 +55,18 @@ export function HeroWorkflowTimeline() {
   return (
     <div
       ref={railRef}
-      className="mt-11 md:mt-[4.5rem]"
+      className="mt-16 rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
       {/* Dot track: dots only, one shared grid, so nothing else can affect row height */}
       <div className={`relative grid gap-x-4 ${TRACK_COLS} lg:h-6`}>
         <div className="absolute inset-0 hidden items-center lg:flex">
-          <div className="h-px w-full bg-[#DAD5C8]" />
+          <div className="h-px w-full bg-white/10" />
         </div>
         <div className="absolute inset-0 hidden items-center lg:flex">
           <div
-            className="h-[1.5px] bg-[#1A1A1A]"
+            className="h-[1.5px] bg-cyan-400"
             style={{ width: `${fillPct}%`, transition: "width 620ms cubic-bezier(.2,.7,.3,1)" }}
           />
         </div>
@@ -84,12 +84,12 @@ export function HeroWorkflowTimeline() {
               <span
                 className="relative z-10 block h-[11px] w-[11px] rounded-full border-2 transition-colors duration-300"
                 style={{
-                  borderColor: done || now ? "#1A1A1A" : "#DAD5C8",
-                  background: s.you ? "#FCFBF7" : done || now ? "#1A1A1A" : "#FCFBF7",
+                  borderColor: done || now ? "#22D3EE" : "#475569",
+                  background: done || now ? "#22D3EE" : "#0B1120",
                 }}
               >
                 {now && n !== STEPS.length - 1 && (
-                  <span className="absolute -inset-1.5 animate-[qa-ring_2.4s_cubic-bezier(.2,.7,.3,1)_infinite] rounded-full border border-[#1A1A1A] opacity-0" />
+                  <span className="absolute -inset-1.5 animate-[qa-ring_2.4s_cubic-bezier(.2,.7,.3,1)_infinite] rounded-full border opacity-border-cyan-4000" />
                 )}
               </span>
             </button>
@@ -112,14 +112,14 @@ export function HeroWorkflowTimeline() {
             >
               <span
                 className="mb-1.5 block font-mono text-[9.5px] uppercase tracking-[0.14em] transition-colors duration-300"
-                style={{ color: now ? (s.you ? "#1D7A46" : "#1A1A1A") : "#9A998F" }}
+                style={{ color: now ? (s.you ? "#1D7A46" : "#22D3EE") : "#94A3B8" }}
               >
                 {s.actor}
               </span>
               <span
                 className="block max-w-[15ch] text-[13.5px] leading-[1.35] transition-colors duration-300 lg:max-w-none"
                 style={{
-                  color: now ? "#1A1A1A" : done ? "#4A4A45" : "#71716A",
+                  color: now ? "#FFFFFF" : done ? "#CBD5E1" : "#64748B",
                   fontWeight: now ? 500 : 400,
                 }}
               >

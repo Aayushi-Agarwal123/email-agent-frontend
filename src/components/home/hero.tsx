@@ -8,41 +8,66 @@ export function Hero() {
   const { ref, inView } = useInViewOnce<HTMLDivElement>();
 
   return (
-    <section className="bg-[#FCFBF7] px-4 py-11 md:py-[4.75rem]" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
-      <div className="container mx-auto">
+    <section
+      className="relative overflow-hidden bg-[#0B1120] px-6 py-16 md:py-24"
+      style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
+    >
+      {/* Background Glow */}
+      <div className="absolute left-1/2 top-0 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-cyan-500/10 blur-[140px]" />
+
+      <div className="relative mx-auto max-w-7xl">
         <div
           ref={ref}
-          className={`opacity-100 motion-safe:transition-all motion-safe:duration-700 motion-safe:ease-out ${
-            inView ? "" : "motion-safe:-translate-x-10 motion-safe:opacity-0"
+          className={`transition-all duration-700 ${
+            inView ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10"
           }`}
         >
+          {/* Badge */}
+          <div className="mb-6 inline-flex items-center rounded-full border border-cyan-400/20 bg-cyan-500/10 px-4 py-2 text-sm font-medium text-cyan-300">
+            ⚡ AI Powered Quotation Platform
+          </div>
+
+          {/* Heading */}
           <h1
-            className="max-w-[19ch] text-[2.25rem] leading-[1.03] tracking-[-0.018em] text-[#1A1A1A] md:text-[3.5rem]"
-            style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 400 }}
+            className="max-w-3xl text-5xl leading-tight tracking-tight text-white md:text-7xl"
+            style={{
+              fontFamily: "'Fraunces', Georgia, serif",
+              fontWeight: 500,
+            }}
+            
           >
             Enterprise Quoting. Automated.
           </h1>
+
+          {/* Description */}
           <p
-            className="mt-5 max-w-[44ch] text-[17px] italic leading-[1.5] text-[#43433E] md:text-[20px]"
-            style={{ fontFamily: "'Fraunces', Georgia, serif" }}
+            className="mt-6 max-w-2xl text-lg leading-8 text-slate-300 md:text-xl"
+            style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
           >
             FastQuote prepares complete quotations from incoming RFQs using your
             catalog, pricing, and branding.
           </p>
 
-          <div className="mt-8 flex flex-wrap items-center gap-6">
+          {/* CTA */}
+          <div className="mt-10 flex flex-wrap items-center gap-6">
             <button
               type="button"
               onClick={() => navigate("/register")}
-              className="inline-flex items-center gap-2.5 rounded-[2px] border-[1.5px] border-[#1A1A1A] bg-[#1A1A1A] px-6 py-3.5 text-[15px] font-medium text-[#FCFBF7] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-[#FCFBF7] hover:text-[#1A1A1A] hover:shadow-[0_12px_32px_rgba(26,26,26,0.15)]"
-            >
-              Get started<span aria-hidden="true">→</span>
+              className="inline-flex items-center gap-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-3.5 text-[15px] font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:shadow-[0_0_35px_rgba(34,211,238,0.45)]"            >
+              Get Started
+              <span>→</span>
             </button>
           </div>
         </div>
 
-        <HeroWorkflowTimeline />
-        <HeroBusinessImpact />
+        {/* Existing Components */}
+        <div className="mt-20">
+          <HeroWorkflowTimeline />
+        </div>
+
+        <div className="mt-16">
+          <HeroBusinessImpact />
+        </div>
       </div>
     </section>
   );
