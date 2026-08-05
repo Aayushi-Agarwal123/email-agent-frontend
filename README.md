@@ -4,7 +4,7 @@ The web dashboard for the email quotation agent: business owners sign in with
 Google, complete a self‑serve onboarding, and watch how the agent is handling
 their quote requests.
 
-> **Live app:** _https://email-agent-frontend-delta.vercel.app/_
+> **Live app:** https://email-agent-frontend-blue.vercel.app
 
 It is a **static single‑page app**. It has no backend of its own — it talks to
 the **BFF** over HTTP. **BFF = Backend for Frontend**: a backend dedicated to
@@ -14,6 +14,40 @@ it. The whole UI can also run with **zero backend** in a bundled demo mode,
 which makes local development and previews trivial.
 
 ---
+## 📸 Screenshots
+
+### Landing Page
+
+![Landing Page](screenshots/landing-page.png)
+
+### Hero-Bussiness
+![Hero-Bussiness](screenshots/Hero-Bussiness.png)
+
+### How it works
+
+![How_it_works](screenshots/How_it_works.png)
+
+### Trust
+
+![Trust](screenshots/Trust.png)
+
+### Benefits
+
+![Benefits](screenshots/Benefits.png)
+
+### cta
+
+![cta](screenshots/cta.png)
+
+### Register
+
+![Register](screenshots/register.png)
+
+### Sign In
+
+![Sign In](screenshots/signin.png)
+
+
 
 ## Tech stack
 
