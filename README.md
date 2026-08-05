@@ -18,34 +18,34 @@ which makes local development and previews trivial.
 
 ### Landing Page
 
-![Landing Page](screenshots/landing-page.png)
+![Landing Page](Screenshots/landing-page.png)
 
 ### Hero-Bussiness
-![Hero-Bussiness](screenshots/Hero-Bussiness.png)
+![Hero-Bussiness](Screenshots/Hero-Bussiness.png)
 
 ### How it works
 
-![How_it_works](screenshots/How_it_works.png)
+![How_it_works](Screenshots/How_it_works.png)
 
 ### Trust
 
-![Trust](screenshots/Trust.png)
+![Trust](Screenshots/Trust.png)
 
 ### Benefits
 
-![Benefits](screenshots/Benefits.png)
+![Benefits](Screenshots/Benefits.png)
 
 ### cta
 
-![cta](screenshots/cta.png)
+![cta](Screenshots/cta.png)
 
 ### Register
 
-![Register](screenshots/register.png)
+![Register](Screenshots/register.png)
 
 ### Sign In
 
-![Sign In](screenshots/signin.png)
+![Sign In](Screenshots/signin.png)
 
 
 
